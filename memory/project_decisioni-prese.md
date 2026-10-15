@@ -28,6 +28,9 @@ metadata:
 - **Git lo gestisce l'utente** (15/10): niente script che fanno `git add`, commit o push
   (`publish.sh` eliminato). Gli hook in `script/hooks/` controllano test e build prima del commit e
   ricordano l'URL githack prima del push.
+- **Cartella del progetto: `D:\Sviluppo\Progetti\typingcode`** (15/10): copia completa di
+  `C:\Download\test` (profilo Chrome, log, backup e `.git` compresi) con i percorsi aggiornati. La
+  vecchia cartella resta come copia, ma non va più usata: il ramo `main` va avanti solo qui.
 - **Struttura delle cartelle** decisa dall'utente il 15/10: `src/mcp/`, `src/extension/`, `dist/`,
   `script/`, `test/tm-inspect/`, `logs/`, `memory/`.
 - **Lingua**: documenti, memorie, issue e commenti Linear in italiano (il progetto Linear non ha
