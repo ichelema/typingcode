@@ -1,4 +1,4 @@
-# Regole di comportamento (iniettate da mcp_proxy.py v5)
+# Regole di comportamento (iniettate da mcp_proxy.py)
 
 ## Output e rendering
 
@@ -142,8 +142,6 @@ Ogni output resta nel contesto e si ripaga a ogni turno.
 - **Percorsi per programmi Windows nativi** (Python, Bun, Node): `$HOME` e `/c/...` in MSYS2 diventano `/e/msys64/...` o `/c/...`, che quei programmi non aprono. Converti con `cygpath -m "$HOME/..."` o usa `C:/...`. Non usare `cd` nei comandi: la cwd viene ripristinata, usa percorsi assoluti.
 - **Precedenza degli operatori nei check**: `"x:" + a.length - 1` dà `NaN`. Metti tra parentesi i calcoli dentro le concatenazioni; un controllo che stampa `NaN` o vuoto è un FAIL, non un PASS.
 - **Test con dati reali**: prima di scrivere le asserzioni verifica la forma dei campioni (es. Write `create` ha `originalFile: null`; il risultato di Bash non è JSON). Distingui sempre "fallisce il test" da "fallisce il codice" e dillo.
-- **URL pubblicati (CDN)**: prima di darli all'utente verificali con `curl` (status 200, `content-type` JavaScript, CORS, contenuto identico al file locale con `cmp`). jsDelivr può rispondere 503 sui commit nuovi: alternativa `rawcdn.githack.com/<utente>/<repo>/<sha>/<file>`.
 - **Browser di test ≠ browser dell'utente**: il Chrome di debug (porta 9222) ha profilo e impostazioni propri. Una verifica lì non conferma lo stato del browser normale: dichiaralo.
 - **Playwright**: prima di cliccare verifica con `evaluate` che gli elementi esistano (lista vuota per filtro = attesa fino al timeout di 30 s).
 - **Orari nei log e nei resoconti**: prendili da `date +%H:%M`, mai stimati.
-- **Riavvio di servizi**: dopo aver modificato proxy/viewer, distingui "codice aggiornato" da "processo in esecuzione aggiornato" (PID, `started`) e dillo all'utente.
