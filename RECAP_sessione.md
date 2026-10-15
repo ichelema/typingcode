@@ -1,8 +1,7 @@
 # Recap sessione — Viewer degli output dei tool per TypingMind
 
-Data: 14/10/2026. Da usare per riprendere il lavoro in una nuova chat.
+Periodo: 14–15/10/2026. Da usare per riprendere il lavoro in una nuova chat.
 **Regola per l'assistente**: a ogni passo significativo aggiornare §6 (stato), §7 (prossimi passi) e aggiungere una riga a §7c (diario). Per riprendere: leggere §6 → §7.
-Consiglio: **apri una chat nuova**. Quella vecchia ("Ciao come stai", id `emjPiMOcKN`) è diventata enorme e bloccava Chrome.
 
 ---
 
@@ -24,7 +23,7 @@ TypingMind (browser)
             └─ all'avvio lancia il viewer se la porta 8765 è libera
 
 src/mcp/log_viewer.py  →  http://127.0.0.1:8765  (pagina live + /log + /ext.js)
-estensione TypingMind (ext.js su jsDelivr) → pannello laterale (v0.4.0; nella 0.3.0 riquadro in basso a destra) con il viewer in un iframe,
+estensione TypingMind 0.4.1 (`dist/ext.js` su githack, repo `ichelema/typingcode`) → pannello laterale con il viewer in un iframe,
    filtrato sulle chiamate della chat aperta (lette in sola lettura da IndexedDB)
 ```
 
@@ -40,7 +39,7 @@ Variabili opzionali (aggiungibili come `NOME=valore` negli args di env.exe, prim
 
 ---
 
-## 3. File in `C:/Download/test/` (riorganizzato 14/10 ~21:25)
+## 3. File in `C:/Download/test/` (riorganizzato il 15/10)
 
 | Percorso | Ruolo |
 |---|---|
@@ -48,17 +47,19 @@ Variabili opzionali (aggiungibili come `NOME=valore` negli args di env.exe, prim
 | `src/mcp/log_viewer.py` | viewer HTTP porta 8765 (filtro per firma); `/ext.js` serve `dist/ext.js` |
 | `src/mcp/core-behavior.md` | regole di comportamento iniettate dal proxy |
 | `RECAP_sessione.md` | questo file |
+| `CLAUDE_OPUS.md` | istruzioni di ruolo per Claude Opus (orchestratore della sessione) |
+| `references/` | copie di riferimento come submodule git (`README.md` con origine e licenza di ognuna) |
 | `logs/proxy_log.jsonl`, `logs/proxy_log_meta.jsonl` | log (in chiaro), ruotati dal proxy; il viewer legge solo `proxy_log.jsonl`; il meta serve solo per la diagnosi a mano. Il proxy crea `logs/` se manca |
 | `src/extension/` | (fino al 15/10 `ext-repo/`, con un suo `.git` ora eliminato) estensione: sorgenti in `src/` (10 moduli), test `test/sig.test.js` (`bun test` da `src/extension`), `README.md` |
 | `dist/` | bundle minificato `ext.js` + `.map` (generato, committato: è il file servito da githack) |
 | `script/build.mjs`, `script/publish.sh`, `.gitignore` | build (`bun script/build.mjs`: `src/extension/src/` → `dist/`) e pubblicazione del progetto nel repo pubblico `ichelema/typingcode` (`bash script/publish.sh "msg"`); `.gitignore` esclude `test/tm-inspect/chrome-profile/`, `playwright-out/`, `live.jpg`, `logs/`, `backups/`; `references/` è nel repo come **submodule** (solo URL + commit verso i repository originali: niente codice di terzi copiato; `git clone --recursive` per scaricarli) |
 | `.git` | repo git dell'intero progetto (dal 15/10), email `noreply` impostata nel repo (la globale è personale: non usarla qui) |
-| `backups/` | vuota dopo la pulizia del 15/10 |
-| `test/tm-inspect/` | (fino al 15/10 `tm-inspect/`) test con Chrome di debug: `cdp.mjs` (eval/shot), `shot.mjs` (screenshot leggeri), `chrome-profile/` (profilo del Chrome di debug, ~220 MB, NON cancellare: contiene il login TypingMind), `playwright-out/` (output di Playwright MCP) |
+| `backups/` | backup creati prima delle modifiche del 15/10 (`*.bak` … `*.bak4`), fuori da git |
+| `test/tm-inspect/` | (fino al 15/10 `tm-inspect/`) test con Chrome di debug: `cdp.mjs` (eval/shot), `shot.mjs` (screenshot leggeri), `chrome-profile/` (profilo del Chrome di debug, ~234 MB, NON cancellare: contiene il login TypingMind), `playwright-out/` (output di Playwright MCP) |
 
 Eliminati il 14/10: `mcp_proxy_v1..v4`, `log_viewer_v2.py`, `typingmind_tool_viewer_ext.js` (copia vecchia 0.1), screenshot PNG, prototipi e sonde una-tantum di `tm-inspect` (`inspect_tm`, `proto_side`, `q_*`), clone `typingmind-extensions/`, `C:/Download/_test_render.*`.
 
-Eliminati il 15/10 alle 04:53: tutti i file di `backups/` (copie identiche ai file attuali, versioni dell'estensione già in git, v5/v3/v8 del proxy e del viewer, TODO già in ICH-179, recap e regole vecchie), `tm-inspect/t_switch.mjs`, `t_theme.mjs`, `t_dark.mjs`, i log di `tm-inspect/playwright-out/`, `references/typingmind/.git` (174 MB: resta solo la build, niente `git pull`), `~/.claude/tmp/chatid-probe/` e `~/.claude/tmp/linear-issues/`.
+Eliminati il 15/10 alle 04:53: tutti i file di `backups/` (copie identiche ai file attuali, versioni dell'estensione già in git, v5/v3/v8 del proxy e del viewer, TODO già in ICH-179, recap e regole vecchie), `tm-inspect/t_switch.mjs`, `t_theme.mjs`, `t_dark.mjs`, i log di `tm-inspect/playwright-out/`, `references/typingmind/.git` (174 MB; dalle 05:59 `references/typingmind` è un submodule), `~/.claude/tmp/chatid-probe/` e `~/.claude/tmp/linear-issues/`.
 
 Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per ripristinare, copiare il file da `backups/` sopra l'originale e riavviare connettore/viewer. L'estensione si ripristina con git in `src/extension/`.
 
@@ -66,21 +67,22 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 
 ## 4. Estensione TypingMind
 
-- Repo pubblico temporaneo: `https://github.com/ichelema/tm-tool-viewer-ext-tmp` (commit con email noreply `5004160+ichelema@users.noreply.github.com`).
-- Pubblicazione: `bash C:/Download/test/script/publish.sh` (da un terminale dove `gh` è autenticato; nella shell dell'assistente `gh` NON è autenticato).
-- **URL da installare (v0.3.0, verificato: HTTP 200, `application/javascript`, CORS `*`, identico al file locale):**
+- Repo pubblico: `https://github.com/ichelema/typingcode` (tutto il progetto, commit con email `noreply`). Il vecchio repo `tm-tool-viewer-ext-tmp` è eliminato, con la cronologia delle versioni fino alla 0.5.0.
+- Pubblicazione: `bash C:/Download/test/script/publish.sh "msg"` (da un terminale dove `gh` è autenticato; nella shell dell'assistente `gh` NON è autenticato, ma `git push` funziona).
+- **URL in uso (v0.4.1, verificato il 15/10: HTTP 200, `application/javascript`, CORS `*`, identico a `dist/ext.js`):**
   ```
-  https://cdn.jsdelivr.net/gh/ichelema/tm-tool-viewer-ext-tmp@d9e397005f392cc65e370a4ea9eb48bc0ce8aeca/ext.js
+  https://rawcdn.githack.com/ichelema/typingcode/9fde5d3a159c8397f6e5e0d29c4e7ee8c6f0c9c4/dist/ext.js
   ```
-  Installazione: Preferences → Advanced Settings → Extensions → sostituire l'URL vecchio → ricaricare (F5).
+  jsDelivr risponde 503 per i commit nuovi: usare githack. Installazione: Preferences → Advanced Settings → Extensions → sostituire l'URL vecchio → ricaricare (F5).
 - Versioni:
-  - 0.1 (`ddb9a0e`): riquadro + avviso offline
-  - 0.2.0 (`bbe0ad5`): filtro per chat — **rileggeva la chat ogni 3 s → blocchi di Chrome**
-  - **0.3.0 (`d9e3970`)**: niente letture periodiche; legge la chat solo al cambio chat, scheda di nuovo visibile, caricamento del viewer, chiamate nuove non ancora nella chat (max 3 tentativi: 1,5/3/6 s)
-  - **0.4.0 (locale, da pubblicare)**: pannello laterale al posto del riquadro flottante + tema (vedi §7b)
+  - 0.1: riquadro + avviso offline
+  - 0.2.0: filtro per chat — **rileggeva la chat ogni 3 s → blocchi di Chrome**
+  - 0.3.0: niente letture periodiche; legge la chat solo al cambio chat, scheda di nuovo visibile, caricamento del viewer, chiamate nuove non ancora nella chat (max 3 tentativi: 1,5/3/6 s)
+  - 0.4.0: pulsante nella barra della chat + pannello laterale (ridimensionabile, alternativo al pannello nativo "About this chat") + tema chiaro/scuro seguito dal vivo
+  - **0.4.1 (in uso)**: codice diviso in moduli (`src/extension/src/`) + bundle minificato `dist/ext.js`
+  - 0.5.0 (annullata il 15/10): un processo MCP per chat; chiamate delle chat in background al processo sbagliato (ICH-178)
 - Diagnostica in console: `window.__toolviewer_stats` → `reads`, `lastMs`, `maxMs`, `lastAt`.
 - Emergenza: `https://www.typingmind.com/?safe_mode=1` carica TypingMind senza estensioni.
-- Pulsante **—** del riquadro: lo riduce e ferma ogni attività dell'estensione.
 
 ### Come funziona il filtro per chat
 - Id chat dall'URL `#chat=<id>` → chiave IndexedDB `keyval-store` / `keyval` / `CHAT_<id>`.
@@ -92,48 +94,36 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 
 ## 5. Cose scoperte / escluse
 
-- **Hook Claude Code (PostToolUse)**: funzionano in Claude Code normale, **non scattano con `claude mcp serve`** (né da `.claude/settings.json` né da plugin `--plugin-dir`). Versione testata: 2.1.299.
+- **Hook Claude Code (PostToolUse)**: funzionano in Claude Code normale, **non scattano con `claude mcp serve`** (né da `.claude/settings.json` né da plugin `--plugin-dir`). Versione testata: 2.1.299. Ricontrollo su una versione nuova: ICH-179.
+- **Nessun id di chat neppure dall'estensione** (15/10): la richiesta al connettore (`POST /clients/<serverID>/call_tools`) contiene solo `name` e `arguments`. TypingMind conosce `chatID` (`contextVariables`), ma i server del JSON MCP sono plugin `generated: true` e le variabili non vengono sostituite. Con un processo per chat, l'id preso da `location.hash` è sbagliato per le chat in background (ICH-178).
+- **La chat in IndexedDB contiene tutti i dati dei tool** (15/10): input in `tool_calls[].function.arguments`, output nel messaggio `role: "tool"` (`content[0].text`, collegato da `tool_call_id`), durata in `toolExecution.finishedAt − startedAt`. Base di ICH-180.
 - **Nessun id di chat lato MCP**: tutte le chat passano da un unico canale (`clientInfo` = `mcp-http-bridge-claude_code`), `params` contiene solo `name` e `arguments`. `CLAUDE_CODE_SESSION_ID` identifica il processo server, non la chat (cambia a ogni riavvio del connettore).
 - **Plugin TypingMind `show_tool_output`** (render_html): funziona ma richiede che l'assistente ricopi l'output → superato dal proxy. Può restare o essere disattivato.
 - Il browser accetta l'iframe `http://127.0.0.1:8765` dentro TypingMind (https) senza blocchi.
 
 ---
 
-## 6. Stato attuale (aggiornato 15/10/2026 01:17)
+## 6. Stato attuale (aggiornato 15/10/2026 06:06)
 
-- **Per riprendere**: leggi questa §6, la §7 e le ultime righe del diario §7c. `HANDOFF_LLM.md` è stato eliminato il 15/10 (descriveva lo stato del 14/10). Issue aperte in Linear, progetto **Typingcode** (fino al 15/10 "Typingmind"): ICH-179 (hook), ICH-180 (pannello dalla chat).
-- **Proxy**: `mcp_proxy.py` v6 attivo (pid 26692, started 2026-10-14 23:17:23): log, regole da `core-behavior.md`, slim di Edit/Write.
-- **Viewer**: `log_viewer.py` (pid 34904): fold chiuso di default, max-height 100px, diff `+N -M`, filtri tool/stato, `/ext.js` = `dist/ext.js`.
-- **Estensione**: 0.4.1, sorgenti `src/extension/src/` → `dist/ext.js` (radice), pubblicata nel repo pubblico `ichelema/typingcode` (il vecchio `tm-tool-viewer-ext-tmp` è eliminato). URL in uso in TypingMind dal 15/10:
-  `https://rawcdn.githack.com/ichelema/typingcode/9fde5d3a159c8397f6e5e0d29c4e7ee8c6f0c9c4/dist/ext.js`
-- **TypingMind**: riassunto automatico del contesto appena attivato dall'utente nel browser normale.
-- **Prototipo id chat** (non pubblicato): estensione 0.5.0 locale, `src/chatid.js` aggiunge `X-TM-Chat-Id` alle fetch verso `127.0.0.1:4001`/`localhost:4001`; server finto `~/.claude/tmp/chatid-probe/probe.mjs` (porta 4001, log `requests.jsonl`, riepilogo `bun probe.mjs --summary`). LiteLLM (4000) NON attivo alle 00:47.
-- **ANNULLATO il 15/10 alle 04:40, ritorno alla 0.4.1**: proxy v7 e viewer precedente ripristinati da `backups/` (le v8 sono in `backups/*.v8.bak`), viewer riavviato (pid 46028), `ext-repo` con `git revert` → `9cb77f5`, identico a `4fe7286`, push fatto. Motivo: chiamate delle chat in background mandate al processo della chat aperta (ICH-178) e righe di log corrotte con più proxy. Prossima idea: il pannello legge input, output e durata dalla chat in IndexedDB (messaggi `role: "tool"`, `tool_call_id`, `toolExecution`) invece che da `proxy_log.jsonl`. Storia della prova: **Un processo MCP per chat**: estensione 0.5.0 (`src/chatid.js`): per i server con `mcp_proxy.py` il serverID diventa `<serverID>~<chatId>` e `env.TM_CHAT_ID=<chatId>`; gli altri server MCP restano invariati. Proxy v8: `chat_id` in ogni voce del log (da `TM_CHAT_ID`), file `.tmp` di rotazione per pid. Viewer: filtro per `chat_id` esatto, firma solo per le voci vecchie; riavviato (pid 16848). Test: `bun test` 11/11, e2e `chatid-probe/e2e-mcp.mjs` PASS (connettore di prova :50881). Proxy dell'utente (pid 26692) ancora con il codice v7 e serverID condiviso.
-- **Hook PostToolUse**: procedura di verifica in `C:/Download/test/TODO.MD` (non eseguita).
-- **Id chat via MCP** (scelta dell'utente, invece di Agent SDK/LiteLLM): il connettore privato è su `:50880` (pid 26216). La pagina chiama con `fetch`: `POST /start` `{mcpServers:{<serverID>:{command,args,env}}}` e `POST /clients/<serverID>/call_tools` `{name,arguments}` (sorgente `2zyxujdnfhj01.js`). `serverID` = `<plugin.uuid>_<id>`, uguale per tutte le chat. Registratore passivo nella scheda 9222 (`chatid-probe/mcp-logger.js`, lettura `mcp-logger-read.js`), attivo fino a F5. Idea: l'estensione cambia `serverID` in `<serverID>~<chatId>` (un processo per chat) e aggiunge `TM_CHAT_ID` in `env`.
-- **Playwright MCP**: alle 00:55 NON agganciato al Chrome 9222 (ha un browser suo); il Chrome 9222 ha solo la chat `ROa5e2T-v_`.
-- **Chrome di debug** (9222) + Playwright MCP agganciato; comando di riapertura in §8.
+- **Per riprendere**: leggi questa §6, la §7 e le ultime righe del diario §7c. Issue aperte in Linear, progetto **Typingcode** (fino al 15/10 "Typingmind"): ICH-179 (hook), ICH-180 (pannello dalla chat). ICH-175 … ICH-178 (0.5.0) sono Canceled.
+- **Proxy**: `src/mcp/mcp_proxy.py` v7 — log in `logs/`, regole da `src/mcp/core-behavior.md`, riduzione di Edit/Write, blocco dei comandi distruttivi. Lo avvia il connettore (alle 06:06: pid 732, avviato alle 05:52:16). Configurazione MCP in §2.
+- **Viewer**: `src/mcp/log_viewer.py` (alle 06:06: pid 36288), filtro per firma, `/ext.js` = `dist/ext.js`.
+- **Estensione**: 0.4.1, URL in §4.
+- **Repo**: `ichelema/typingcode`, pubblico, con tutto il progetto (§3); `references/` come submodule.
+- **Chrome di debug** (9222): chiuso. Profilo in `test/tm-inspect/chrome-profile`, comando di riapertura in §8. Il server MCP `playwright` di TypingMind si aggancia a questo Chrome (`--output-dir C:/Download/test/test/tm-inspect/playwright-out`).
+- **TypingMind**: riassunto automatico del contesto attivato dall'utente nel browser normale.
+- **Claude Code**: versione 2.1.300 (il test degli hook in §5 era sulla 2.1.299).
 
 ---
 
 ## 7. Prossimi passi (in ordine)
 
-1. **Inizia da qui**: l'utente esegue `bash ext-repo/publish.sh "v0.5.0 processo MCP per chat"`, mette il nuovo URL githack in TypingMind (browser normale), ricarica, e in due chat diverse chiede un tool. Controllo: `GET /clients` del connettore mostra `<id>~<chatA>` e `<id>~<chatB>`, `proxy_log.jsonl` ha `chat_id`. Rischio da controllare: tool chiamato mentre è aperta un'altra chat (generazione in background) -> processo sbagliato.
-2. Dopo: chiusura dei processi inattivi (`DELETE /clients/<id>~<chat>`); verifica hook (TODO.MD).
-1c. (vecchio) **Inizia da qui**: l'utente pubblica 0.5.0 (`bash ext-repo/publish.sh`), aggiorna l'URL, crea in TypingMind un modello personalizzato `http://127.0.0.1:4001/v1/chat/completions` e prova: chat normale, cambio chat durante lo streaming, titolo, riassunto. Poi `bun probe.mjs --summary`.
-1b. (fatto) **Inizia da qui**: chiedere all'utente se vuole il prototipo "id chat nelle richieste" (estensione che intercetta `fetch` e aggiunge `X-TM-Chat-Id` + server di prova che registra le richieste). Obiettivo: decidere se passare da MCP al Claude Agent SDK come provider personalizzato LiteLLM (`127.0.0.1:4000`).
-2. Se sì: verificare che l'id arrivi sempre, che le richieste partano dalla pagina (non worker/server TypingMind) e quali richieste extra fa TypingMind (titolo, riassunto).
-3. Opzionali già proposti: "errore" = solo fallimenti veri nel viewer; blocco comandi distruttivi nel proxy; stato aperto/chiuso conservato al cambio chat.
-4. Pulizia: `C:/Download/_test_render.*`, repo GitHub temporaneo quando non serve più.
+1. **ICH-180**: prototipo del pannello che legge input, output e durata dei tool dalla chat in IndexedDB (§5), invece che da `logs/proxy_log.jsonl`. Si prova nel Chrome di debug (§8).
+2. Dopo ICH-180: decidere se togliere da `mcp_proxy.py` la parte di log e l'avvio del viewer, e se `log_viewer.py` serve ancora. Le regole, la riduzione di Edit/Write e il blocco dei comandi distruttivi restano.
+3. **ICH-179**: ricontrollare gli hook `PreToolUse`/`PostToolUse` con `claude mcp serve` sulla versione attuale di Claude Code (ultimo test in §5, sulla 2.1.299).
+4. Idee opzionali: "errore" nel viewer solo per i fallimenti veri (oggi un Bash con stderr non vuoto conta come errore); stato aperto/chiuso delle chiamate conservato al cambio chat.
 
 ---
-
-## 7b. Aggiornamento 14/10 sera — v0.4.0 (pannello laterale + tema)
-
-- `ext-repo/ext.js` **v0.4.0** (NON ancora committata/pubblicata): pulsante nella barra della chat, pannello laterale agganciato a `chat-space-background` (ridimensionabile, alternativo al pannello nativo "About this chat"), intestazione con titolo chat + conteggio "N di M chiamate" + selettore Chat/Tutte (ricordato in localStorage), tema chiaro/scuro dedotto dallo sfondo reale della chat e seguito anche al cambio tema dal vivo (osservatore su `<html>` + riletto dopo 400 ms per la transizione CSS di 0,15 s del body).
-- `log_viewer.py` **v3** (backup precedente: `log_viewer_v2.py`): `?embed=1` (senza intestazione), tema via URL/`tm-theme`, manda `tm-viewer-status`, accetta `tm-set-mode`. Viewer riavviato con il codice nuovo.
-- Testato nel Chrome di debug (porta 9222, profilo `tm-inspect/chrome-profile`): filtro per chat, cambio chat, Chat/Tutte, tema chiaro↔scuro. Script: `tm-inspect/t_theme.mjs`, `tm-inspect/t_dark.mjs`.
-- **Da fare**: `bash C:/Download/test/ext-repo/publish.sh` da un terminale con `gh` autenticato → sostituire in TypingMind l'URL jsDelivr col nuovo SHA → F5.
 
 ## 7c. Diario delle sessioni (aggiungere una riga a ogni sessione)
 
@@ -160,6 +150,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 | 14/10 22:52 | estensione divisa in moduli `src/` + bundle `dist/ext.js` (bun build, IIFE minificato, source map); `bun test` 4/4 PASS; test nel Chrome di debug PASS (caricamento, Chat/Tutte, cambio chat, chiudi/riapri, pannello nativo, tema chiaro/scuro); `publish.sh` aggiornato (test+build, URL githack e jsDelivr su `dist/ext.js`, controllo cmp) | **da pubblicare**: `bash publish.sh "Split extension into modules + minified bundle"` → nuovo URL `.../dist/ext.js` in TypingMind |
 | 14/10 22:57 | 0.4.1 pubblicata (`4fe7286`, messaggio di default); githack 200 + CORS + identico a dist, jsDelivr 503; Chrome di debug aggiornato al nuovo URL + F5: `dist/ext.js` 200, "caricata v0.4.1", pannello e filtro ok, nessun errore | browser normale: installato dall'utente |
 | 14/10 23:05 | analisi sorgente TypingMind (`references/typingmind`, chunk `0e98c2_2rirwz.js` + `2zyxujdnfhj01.js`): compattazione = `_checkAndSummarizeContextIfNeeded` (soglia 70% di contextLength, taglio al 70% dei messaggi a fine risposta assistant, riassunto con `CONTEXT_SUMMARIZER_PROMPT` → messaggio `tm_context_summary`). Chat in IndexedDB `keyval-store/keyval/CHAT_<id>` (chat corrente 263 msg, 794 KB). Nel Chrome di debug `TM_useContextSummarySettings.enabled=false` | solo analisi |
+| 14/10 23:14 | proxy v7: guard comandi distruttivi (rm -rf, git push --force, git reset --hard) con errore leggibile + sblocco `# proxy:allow`; stdout serializzato con lock (ora scrivono due thread); test e2e server finto PASS 22/22 | **attivo solo dopo riavvio del connettore** |
 | 14/10 23:15 | valutata alternativa Agent SDK al posto di MCP: TypingMind → LiteLLM (già attivo su 127.0.0.1:4000, `~/.litellm`, sessione fissa `typingmind`) → provider personalizzato LiteLLM che chiama `claude_agent_sdk.query(resume)`. Problema aperto: nessun id della chat neppure lì (associazione via hash dell'ultima risposta). `claude_agent_sdk` non installato | proposta, nessuna modifica |
 | 15/10 00:41 | scritto `HANDOFF_LLM.md` per la ripresa da parte di un altro LLM; §6 e §7 riscritte con lo stato corrente | in attesa di risposta sul prototipo id chat |
 | 15/10 00:54 | prototipo id chat: `src/chatid.js` + test (7/7 PASS), build 0.5.0; server finto 4001; test nel browser di Playwright PASS (id giusto prima e dopo replaceState, CORS ok) e nella scheda 9222 via CDP (`chatid-probe/cdp-eval.mjs`) PASS: id `ROa5e2T-v_` arrivato | non pubblicato, in attesa della prova dell'utente |
@@ -184,7 +175,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 | 15/10 05:51 | l'utente usa in TypingMind `…/typingcode/9fde5d3…/dist/ext.js` (200, JS, CORS `*`, identico a `dist/ext.js`, v0.4.1); vecchio repo `tm-tool-viewer-ext-tmp` eliminato (API GitHub 404). Riorganizzazione e pubblicazione concluse | aperte: ICH-179 (hook), ICH-180 (pannello dalla chat) |
 | 15/10 05:59 | `references/` nel repo come submodule (scelta dell'utente: `typingmind/` ha licenza che vieta la ridistribuzione, `typingmind-extensions/` e `simple-cors-proxy/` non hanno licenza): `simple-cors-proxy` `b9c0d77`, `typingmind-contentshield` `2d63ae4`, `typingmind-extensions` `97d92e6` (stessi commit di prima), `typingmind` `cd87b2c` (`--depth 1`, `shallow = true`; build identica alla copia locale, ora in `backups/typingmind-old/`, eliminabile). `README.md` di nuovo nel repo; `publish.sh` aggiunge `.gitmodules` e `references`. Commit `7a6845f` | — |
 | 15/10 06:02 | progetto Linear rinominato dall'utente in "Typingcode"; ICH-175 passata da Done a Canceled con commento (0.5.0 annullata, nuovo repo `typingcode`, vecchio eliminato): ora tutte le issue della 0.5.0 (175-178) sono Canceled | aperte: ICH-179, ICH-180 |
-| 14/10 23:14 | proxy v7: guard comandi distruttivi (rm -rf, git push --force, git reset --hard) con errore leggibile + sblocco `# proxy:allow`; stdout serializzato con lock (ora scrivono due thread); test e2e server finto PASS 22/22 | **attivo solo dopo riavvio del connettore** |
+| 15/10 06:06 | pulizia del recap: intestazione, §2, §3 (+ `CLAUDE_OPUS.md`, `references/`, `backups/`), §4 (repo `typingcode`, URL githack, versioni fino alla 0.5.0 annullata), §5 (+ id chat dall'estensione, dati dei tool nella chat), §6 e §7 riscritte con lo stato attuale, §7b tolta, §8 (dimensioni, percorso di `cdp.mjs`); riga del 14/10 23:14 rimessa in ordine. Backup `backups/RECAP_sessione.md.bak`. ICH-179 tenuta come ricontrollo sulla versione nuova (2.1.300) | aperte: ICH-179, ICH-180 |
 
 ## 8. Promemoria tecnici
 
@@ -195,5 +186,5 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 - I log contengono tutto in chiaro (anche eventuali segreti letti dai file).
 - **Playwright MCP** (server `playwright` del connettore TypingMind) è agganciato al Chrome di debug via `--cdp-endpoint http://127.0.0.1:9222`. Se il Chrome di debug è chiuso, riaprirlo con:
   `"/c/Program Files/Google/Chrome/Application/chrome.exe" --remote-debugging-port=9222 --remote-debugging-address=127.0.0.1 --user-data-dir="C:/Download/test/test/tm-inspect/chrome-profile" https://www.typingmind.com/`
-- **Risparmio token** (causa del limite 1M): ogni turno rimanda tutto il contesto, quindi ogni output grande si ripaga a ogni passo. Evitare: Edit/Write su file grandi (il tool restituisce l'intero file: `ext.js` ~23 KB, questo recap ~11 KB) → per file grandi usare modifiche via script con output minimo; Read di file interi (usare offset/limit o Grep); output Bash lunghi (sempre `head`/`cut`, mai righe di comando complete dei processi); screenshot (solo JPEG ridotti o `--image-responses omit`). Aprire una chat nuova per ogni blocco di lavoro e riprendere da questo file.
-- **Screenshot per l'assistente: solo leggeri** (richiesta utente, consumano token). Usare `test/tm-inspect/shot.mjs` (JPEG, scala 0,5, qualità 50) o `node cdp.mjs shot <file.jpg> [selettore]` per ritagliare un elemento (es. `#tv-side-panel`). Preferire verifiche via `eval` (JSON) e guardare immagini solo se serve davvero.
+- **Risparmio token** (causa del limite 1M): ogni turno rimanda tutto il contesto, quindi ogni output grande si ripaga a ogni passo. Evitare: Edit/Write su file grandi (il tool restituisce l'intero file: `ext.js` ~14 KB, questo recap ~30 KB) → per file grandi usare modifiche via script con output minimo; Read di file interi (usare offset/limit o Grep); output Bash lunghi (sempre `head`/`cut`, mai righe di comando complete dei processi); screenshot (solo JPEG ridotti o `--image-responses omit`). Aprire una chat nuova per ogni blocco di lavoro e riprendere da questo file.
+- **Screenshot per l'assistente: solo leggeri** (richiesta utente, consumano token). Usare `test/tm-inspect/shot.mjs` (JPEG, scala 0,5, qualità 50) o `node test/tm-inspect/cdp.mjs shot <file.jpg> [selettore]` per ritagliare un elemento (es. `#tv-side-panel`). Preferire verifiche via `eval` (JSON) e guardare immagini solo se serve davvero.
