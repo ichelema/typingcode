@@ -101,7 +101,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 
 ## 6. Stato attuale (aggiornato 15/10/2026 01:17)
 
-- **Per riprendere**: leggi questa §6, la §7 e le ultime righe del diario §7c. `HANDOFF_LLM.md` è stato eliminato il 15/10 (descriveva lo stato del 14/10). Issue aperte in Linear, progetto **typingcode** (fino al 15/10 "Typingmind"): ICH-179 (hook), ICH-180 (pannello dalla chat).
+- **Per riprendere**: leggi questa §6, la §7 e le ultime righe del diario §7c. `HANDOFF_LLM.md` è stato eliminato il 15/10 (descriveva lo stato del 14/10). Issue aperte in Linear, progetto **Typingcode** (fino al 15/10 "Typingmind"): ICH-179 (hook), ICH-180 (pannello dalla chat).
 - **Proxy**: `mcp_proxy.py` v6 attivo (pid 26692, started 2026-10-14 23:17:23): log, regole da `core-behavior.md`, slim di Edit/Write.
 - **Viewer**: `log_viewer.py` (pid 34904): fold chiuso di default, max-height 100px, diff `+N -M`, filtri tool/stato, `/ext.js` = `dist/ext.js`.
 - **Estensione**: 0.4.1, sorgenti `src/extension/src/` → `dist/ext.js` (radice), pubblicata nel repo pubblico `ichelema/typingcode` (il vecchio `tm-tool-viewer-ext-tmp` è eliminato). URL in uso in TypingMind dal 15/10:
@@ -183,6 +183,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 | 15/10 05:50 | l'utente ha pubblicato `typingcode` (commit `9fde5d3` alle 05:47:40, già con la pulizia); push del commit del recap `5b8a644`. githack 200 `application/javascript` e identico per i due commit; 25 file pubblici, nessun file escluso (profilo, log, backup, references) | l'utente: URL `…/typingcode/5b8a644…/dist/ext.js` in TypingMind + F5, poi `gh repo delete ichelema/tm-tool-viewer-ext-tmp` |
 | 15/10 05:51 | l'utente usa in TypingMind `…/typingcode/9fde5d3…/dist/ext.js` (200, JS, CORS `*`, identico a `dist/ext.js`, v0.4.1); vecchio repo `tm-tool-viewer-ext-tmp` eliminato (API GitHub 404). Riorganizzazione e pubblicazione concluse | aperte: ICH-179 (hook), ICH-180 (pannello dalla chat) |
 | 15/10 05:59 | `references/` nel repo come submodule (scelta dell'utente: `typingmind/` ha licenza che vieta la ridistribuzione, `typingmind-extensions/` e `simple-cors-proxy/` non hanno licenza): `simple-cors-proxy` `b9c0d77`, `typingmind-contentshield` `2d63ae4`, `typingmind-extensions` `97d92e6` (stessi commit di prima), `typingmind` `cd87b2c` (`--depth 1`, `shallow = true`; build identica alla copia locale, ora in `backups/typingmind-old/`, eliminabile). `README.md` di nuovo nel repo; `publish.sh` aggiunge `.gitmodules` e `references`. Commit `7a6845f` | — |
+| 15/10 06:02 | progetto Linear rinominato dall'utente in "Typingcode"; ICH-175 passata da Done a Canceled con commento (0.5.0 annullata, nuovo repo `typingcode`, vecchio eliminato): ora tutte le issue della 0.5.0 (175-178) sono Canceled | aperte: ICH-179, ICH-180 |
 | 14/10 23:14 | proxy v7: guard comandi distruttivi (rm -rf, git push --force, git reset --hard) con errore leggibile + sblocco `# proxy:allow`; stdout serializzato con lock (ora scrivono due thread); test e2e server finto PASS 22/22 | **attivo solo dopo riavvio del connettore** |
 
 ## 8. Promemoria tecnici
