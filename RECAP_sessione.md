@@ -45,11 +45,14 @@ Variabili opzionali (aggiungibili come `NOME=valore` negli args di env.exe, prim
 | Percorso | Ruolo |
 |---|---|
 | `mcp_proxy.py` | **v7** in uso: proxy MCP + log + avvio viewer + rotazione + iniezione regole da `core-behavior.md` (`MCP_PROXY_RULES`, disattivabile con `MCP_PROXY_NO_HINTS=1`) + riduzione Edit/Write (v6) + blocco comandi distruttivi (v7) |
-| `log_viewer.py` | viewer HTTP porta 8765 (filtro per firma); `/ext.js` serve `src/extension/dist/ext.js` |
+| `log_viewer.py` | viewer HTTP porta 8765 (filtro per firma); `/ext.js` serve `dist/ext.js` |
 | `core-behavior.md` | regole di comportamento iniettate dal proxy |
 | `RECAP_sessione.md` | questo file |
 | `logs/proxy_log.jsonl`, `logs/proxy_log_meta.jsonl` | log (in chiaro), ruotati dal proxy; il viewer legge solo `proxy_log.jsonl`; il meta serve solo per la diagnosi a mano. Il proxy crea `logs/` se manca |
-| `src/extension/` | (fino al 15/10 `ext-repo/`) repo git dell'estensione: sorgenti in `src/` (10 moduli), bundle minificato `dist/ext.js` + `.map` generato da `build.mjs` (Bun), test `test/sig.test.js`, `publish.sh`, `README.md` |
+| `src/extension/` | (fino al 15/10 `ext-repo/`, con un suo `.git` ora eliminato) estensione: sorgenti in `src/` (10 moduli), `build.mjs` (Bun) che scrive in `dist/` nella radice, test `test/sig.test.js`, `README.md` |
+| `dist/` | bundle minificato `ext.js` + `.map` (generato, committato: è il file servito da githack) |
+| `publish.sh`, `.gitignore` | pubblicazione del progetto nel repo pubblico `ichelema/typingcode`; `.gitignore` esclude `tm-inspect/chrome-profile/`, `playwright-out/`, `logs/`, `backups/`, `references/*` tranne il README |
+| `.git` | repo git dell'intero progetto (dal 15/10), email `noreply` impostata nel repo (la globale è personale: non usarla qui) |
 | `backups/` | vuota dopo la pulizia del 15/10 |
 | `tm-inspect/` | test con Chrome di debug: `cdp.mjs` (eval/shot), `shot.mjs` (screenshot leggeri), `chrome-profile/` (profilo del Chrome di debug, ~220 MB, NON cancellare: contiene il login TypingMind), `playwright-out/` (output di Playwright MCP) |
 
@@ -64,7 +67,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 ## 4. Estensione TypingMind
 
 - Repo pubblico temporaneo: `https://github.com/ichelema/tm-tool-viewer-ext-tmp` (commit con email noreply `5004160+ichelema@users.noreply.github.com`).
-- Pubblicazione: `bash C:/Download/test/src/extension/publish.sh` (da un terminale dove `gh` è autenticato; nella shell dell'assistente `gh` NON è autenticato).
+- Pubblicazione: `bash C:/Download/test/publish.sh` (da un terminale dove `gh` è autenticato; nella shell dell'assistente `gh` NON è autenticato).
 - **URL da installare (v0.3.0, verificato: HTTP 200, `application/javascript`, CORS `*`, identico al file locale):**
   ```
   https://cdn.jsdelivr.net/gh/ichelema/tm-tool-viewer-ext-tmp@d9e397005f392cc65e370a4ea9eb48bc0ce8aeca/ext.js
@@ -100,8 +103,8 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 
 - **Per riprendere**: leggi questa §6, la §7 e le ultime righe del diario §7c. `HANDOFF_LLM.md` è stato eliminato il 15/10 (descriveva lo stato del 14/10). Issue aperte in Linear, progetto Typingmind: ICH-179 (hook), ICH-180 (pannello dalla chat).
 - **Proxy**: `mcp_proxy.py` v6 attivo (pid 26692, started 2026-10-14 23:17:23): log, regole da `core-behavior.md`, slim di Edit/Write.
-- **Viewer**: `log_viewer.py` (pid 34904): fold chiuso di default, max-height 100px, diff `+N -M`, filtri tool/stato, `/ext.js` = `src/extension/dist/ext.js`.
-- **Estensione**: 0.4.1 pubblicata (`4fe7286`), sorgenti `src/extension/src/` → `dist/ext.js`. URL in uso:
+- **Viewer**: `log_viewer.py` (pid 34904): fold chiuso di default, max-height 100px, diff `+N -M`, filtri tool/stato, `/ext.js` = `dist/ext.js`.
+- **Estensione**: 0.4.1 pubblicata (`4fe7286`), sorgenti `src/extension/src/` → `dist/ext.js` (radice). Il nuovo repo pubblico è `ichelema/typingcode` (commit iniziale locale `022de82`, da pubblicare); il vecchio `tm-tool-viewer-ext-tmp` va eliminato solo dopo che TypingMind usa il nuovo URL. URL in uso finché non cambia:
   `https://rawcdn.githack.com/ichelema/tm-tool-viewer-ext-tmp/4fe72862cac5d83450ec25609be87a93db2b5bfb/dist/ext.js`
 - **TypingMind**: riassunto automatico del contesto appena attivato dall'utente nel browser normale.
 - **Prototipo id chat** (non pubblicato): estensione 0.5.0 locale, `src/chatid.js` aggiunge `X-TM-Chat-Id` alle fetch verso `127.0.0.1:4001`/`localhost:4001`; server finto `~/.claude/tmp/chatid-probe/probe.mjs` (porta 4001, log `requests.jsonl`, riepilogo `bun probe.mjs --summary`). LiteLLM (4000) NON attivo alle 00:47.
@@ -172,6 +175,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 | 15/10 05:00 | `mcp_proxy.py`: tolta la modalità test (avvio senza argomenti); ora senza argomenti esce con il messaggio d'uso (exit 1). Backup in `backups/mcp_proxy.py.bak`. Controllo con log di prova PASS: initialize con le regole, tools/list (28 tool, Bash con REGOLE), Bash `echo`, guardia `rm -rf`, 2 voci nel log. Parte log/viewer del proxy da togliere solo dopo il prototipo di ICH-180 | HANDOFF eliminato; ripresa da §6/§7/§7c |
 | 15/10 05:03 | log spostato in `logs/proxy_log.jsonl` (default in `mcp_proxy.py:13` e `log_viewer.py:10`; il proxy crea `logs/` all'avvio); `proxy_log_meta.jsonl` eliminato (si ricrea in `logs/`). Backup: `backups/mcp_proxy.py.bak2`, `backups/log_viewer.py.bak`. Viewer riavviato (pid 43588): 457 voci lette | primo avvio del proxy con il percorso nuovo: alla prossima chiamata a un tool |
 | 15/10 05:08 | `ext-repo/` spostata in `src/extension/`: `mv` rifiutato da Windows (cartella aperta da un programma nativo, non identificato), quindi copia identica (`diff -rq`, `.git` compreso) + eliminazione di `ext-repo` (approvata dall'utente). `log_viewer.py:12` aggiornato (backup `backups/log_viewer.py.bak2`), viewer riavviato (pid 27496): `/ext.js` 200 e identico, 457 voci. Commento del test aggiornato: commit `1196972`, push OK | — |
+| 15/10 05:20 | nuovo repo per tutto il progetto: `git init` in `C:/Download/test` (email `noreply` locale), `.gitignore` per i dati personali e il codice di terzi, `dist/` nella radice (`build.mjs` aggiornato, bundle identico), `publish.sh` nella radice per `typingcode`, `log_viewer.py:12` → `dist/ext.js` (backup `backups/log_viewer.py.bak3`, viewer pid 42800), `src/extension/.git` eliminato (cronologia dell'estensione persa, approvato). Commit iniziale locale `022de82` (25 file). Nessun segreto trovato nei file pubblicati | l'utente: elimina `src/extension/publish.sh` (rm rifiutato), esegue `bash publish.sh`, mette il nuovo URL, poi elimina il vecchio repo |
 | 14/10 23:14 | proxy v7: guard comandi distruttivi (rm -rf, git push --force, git reset --hard) con errore leggibile + sblocco `# proxy:allow`; stdout serializzato con lock (ora scrivono due thread); test e2e server finto PASS 22/22 | **attivo solo dopo riavvio del connettore** |
 
 ## 8. Promemoria tecnici
