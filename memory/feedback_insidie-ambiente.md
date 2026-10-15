@@ -15,7 +15,8 @@ metadata:
 - **`gh` non è autenticato** nella shell dell'assistente; `git push` via HTTPS funziona. Creare o
   eliminare repository GitHub lo fa l'utente.
 - **Email git globale = personale.** Nel repo `typingcode` è impostata l'email `noreply` locale
-  (`publish.sh` la reimposta): non fare commit da un repo senza questa impostazione.
+  (`<id>+ichelema@users.noreply.github.com`, in `.git/config`): dopo un clone nuovo reimpostarla
+  prima del primo commit, altrimenti l'email personale finisce nel repo pubblico.
 - **Windows blocca `mv` di una cartella** aperta da un programma nativo ("Permission denied"):
   copiare, controllare con `diff -rq`, poi eliminare l'originale.
 - **`src/mcp/mcp_proxy.py` ha fine riga CRLF** (gli altri file LF): modifiche su più righe solo via

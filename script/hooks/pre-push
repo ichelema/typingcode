@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Prima del push: se i commit pubblicati su main cambiano dist/ext.js, stampa l'URL githack da mettere in TypingMind.
+# Non blocca mai il push. Git passa: $1 = nome del remote, $2 = URL; su stdin "<ref locale> <sha locale> <ref remoto> <sha remoto>".
+cd "$(git rev-parse --show-toplevel)" || exit 0
+case "$2" in *github.com*) ;; *) exit 0 ;; esac      # githack serve solo repo GitHub
+ZERO=0000000000000000000000000000000000000000
+REPO=$(printf '%s' "$2" | sed -E 's#^(https://github\.com/|git@github\.com:)##; s#\.git$##')   # es. ichelema/typingcode
+
+while read -r _ lsha rref rsha; do
+  [ "$lsha" = "$ZERO" ] && continue                 # cancellazione di un ramo remoto
+  [ "$rref" = "refs/heads/main" ] || continue
+  new=$(git rev-parse -q --verify "$lsha:dist/ext.js") || continue
+  old=$(git rev-parse -q --verify "$rsha:dist/ext.js" 2>/dev/null) || old=""
+  [ "$new" = "$old" ] && continue                   # stesso bundle: l'URL in uso resta valido
+  URL="https://rawcdn.githack.com/$REPO/$lsha/dist/ext.js"
+  echo
+  echo "pre-push: dist/ext.js cambia con questo push. Dopo il push metti in TypingMind"
+  echo "(Preferences > Advanced Settings > Extensions) questo URL e premi F5:"
+  echo "  $URL"
+  echo "Controllo dopo il push (200 e identico al file locale):"
+  echo "  curl -fsS '$URL' | cmp - dist/ext.js && echo OK"
+  echo
+done
+exit 0

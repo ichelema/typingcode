@@ -1,6 +1,6 @@
 ---
 name: comandi
-description: comandi verificati il 2026-10-15 — test e build dell'estensione, pubblicazione, Chrome di debug, cdp.mjs, riavvio del viewer, controllo del proxy, Linear
+description: comandi verificati il 2026-10-15 — test e build dell'estensione, hook git, Chrome di debug, cdp.mjs, riavvio del viewer, controllo del proxy, Linear
 metadata:
   type: reference
 ---
@@ -10,7 +10,7 @@ metadata:
 ```bash
 (cd src/extension && bun test)                 # test delle funzioni pure (4 test)
 bun script/build.mjs [--watch]                 # src/extension/src/ -> dist/ext.js (+ .map)
-bash script/publish.sh "msg"                   # test + build + commit + push + URL; serve gh autenticato
+git config core.hooksPath script/hooks         # una volta dopo il clone: attiva pre-commit e pre-push
 bash script/chrome-debug.sh                    # Chrome di debug su :9222 (non apre una seconda istanza)
 node test/tm-inspect/cdp.mjs eval "<js>"       # esegue JS nella prima scheda del Chrome 9222
 node test/tm-inspect/cdp.mjs shot [file.jpg]   # screenshot leggero

@@ -25,6 +25,9 @@ metadata:
 - **Sviluppo solo da Claude Code in `C:/Download/test`; TypingMind è produzione** (15/10): le regole
   iniettate dal proxy (`src/mcp/core-behavior.md` e la sintesi in `mcp_proxy.py`) non parlano delle
   memorie di questo progetto. `CLAUDE.md` e `memory/` servono solo alle sessioni di sviluppo qui.
+- **Git lo gestisce l'utente** (15/10): niente script che fanno `git add`, commit o push
+  (`publish.sh` eliminato). Gli hook in `script/hooks/` controllano test e build prima del commit e
+  ricordano l'URL githack prima del push.
 - **Struttura delle cartelle** decisa dall'utente il 15/10: `src/mcp/`, `src/extension/`, `dist/`,
   `script/`, `test/tm-inspect/`, `logs/`, `memory/`.
 - **Lingua**: documenti, memorie, issue e commenti Linear in italiano (il progetto Linear non ha

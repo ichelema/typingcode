@@ -18,7 +18,7 @@ metadata:
 | `src/extension/` | estensione: sorgenti in `src/` (10 moduli), test `test/sig.test.js`, `README.md` (fino al 15/10 `ext-repo/`, con un suo `.git` ora eliminato) |
 | `dist/` | bundle minificato `ext.js` + `.map` (generato, committato: è il file servito da githack) |
 | `script/build.mjs` | build: `src/extension/src/` → `dist/` |
-| `script/publish.sh` | test, build, commit e push nel repo pubblico `ichelema/typingcode`, stampa gli URL |
+| `script/hooks/` | hook git (`git config core.hooksPath script/hooks`): `pre-commit` (test + build se cambia `src/extension/`, blocca se `dist/` non è aggiornato), `pre-push` (stampa l'URL githack se cambia `dist/ext.js`) |
 | `script/chrome-debug.sh` | avvia il Chrome di debug (porta 9222) con il profilo di `test/tm-inspect/` |
 | `test/tm-inspect/` | `cdp.mjs` (eval/shot sul Chrome 9222), `shot.mjs` (screenshot leggeri), `chrome-profile/` (~234 MB, login TypingMind: NON cancellare), `playwright-out/` |
 | `references/` | copie di riferimento come submodule git (`README.md` con origine e licenza) |

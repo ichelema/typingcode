@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Prima del commit: se il commit tocca src/extension/, esegue i test e ricostruisce dist/.
+# Blocca il commit se dist/ non corrisponde ai sorgenti (va aggiunto al commit). Per saltarlo: git commit --no-verify
+set -uo pipefail
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+git diff --cached --quiet -- src/extension && exit 0   # commit senza sorgenti dell'estensione: niente da fare
+
+if ! (cd src/extension && bun test >/dev/null 2>&1); then
+  echo "pre-commit: FAIL test dell'estensione falliti (dettagli: cd src/extension && bun test)"; exit 1
+fi
+if ! bun script/build.mjs >/dev/null; then
+  echo "pre-commit: FAIL build fallita (dettagli: bun script/build.mjs)"; exit 1
+fi
+# ponytail: la build usa i file del worktree, non solo la parte in staging; con commit parziali di src/ ricontrolla a mano
+if ! git diff --quiet -- dist; then
+  echo "pre-commit: FAIL dist/ non corrisponde ai sorgenti: la build l'ha aggiornato, aggiungilo al commit (git add dist)"; exit 1
+fi
+echo "pre-commit: PASS test e build, dist/ allineato ai sorgenti"

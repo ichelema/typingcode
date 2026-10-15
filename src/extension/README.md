@@ -28,7 +28,7 @@ bun test                        # test delle funzioni pure
 # dalla radice del progetto
 bun script/build.mjs            # src/extension/src/ -> dist/ext.js (+ ext.js.map)
 bun script/build.mjs --watch    # ricompila a ogni modifica
-bash script/publish.sh "msg"    # test + build + commit + push del progetto, stampa gli URL fissati al commit
+git config core.hooksPath script/hooks   # una volta: pre-commit (test + build) e pre-push (URL githack)
 ```
 
 Durante lo sviluppo il viewer locale serve il bundle anche su `http://127.0.0.1:8765/ext.js`.

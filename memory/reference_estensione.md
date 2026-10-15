@@ -9,7 +9,10 @@ metadata:
 
 - Repo pubblico: `https://github.com/ichelema/typingcode` (tutto il progetto). Il vecchio repo
   `tm-tool-viewer-ext-tmp` è eliminato, con la cronologia delle versioni fino alla 0.5.0.
-- Pubblicazione: `bash script/publish.sh "msg"` (vedi [comandi](reference_comandi.md)).
+- Pubblicazione: commit e push con git, gestiti dall'utente. L'hook `pre-commit` esegue test e build
+  quando il commit tocca `src/extension/` e blocca il commit se `dist/` non è aggiornato; l'hook
+  `pre-push` stampa l'URL githack del commit quando il push cambia `dist/ext.js`, più il comando per
+  controllarlo (`script/hooks/`, attivi con `core.hooksPath`).
 - **URL in uso (v0.4.1, verificato il 15/10: HTTP 200, `application/javascript`, CORS `*`, identico a `dist/ext.js`):**
   ```
   https://rawcdn.githack.com/ichelema/typingcode/9fde5d3a159c8397f6e5e0d29c4e7ee8c6f0c9c4/dist/ext.js

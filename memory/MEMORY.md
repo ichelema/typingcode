@@ -12,5 +12,5 @@ verificati, puntatori), `feedback_` (insidie e regole di lavoro). Fatto che camb
 - [Struttura della cartella](reference_struttura-cartella.md) — cosa contiene ogni file e cartella, cosa è escluso da git, backup e rollback
 - [Estensione TypingMind](reference_estensione.md) — repo e URL githack in uso, versioni 0.1–0.5.0, filtro per chat con firma, diagnostica ed emergenza
 - [Scoperte ed esclusioni](reference_scoperte.md) — hook non scattano con `mcp serve` (2.1.299); nessun id chat (`generated: true`); dati dei tool nella chat IndexedDB; compattazione del contesto
-- [Comandi](reference_comandi.md) — test, build, pubblicazione, Chrome di debug, `cdp.mjs`, riavvio del viewer, controllo del proxy, Linear
+- [Comandi](reference_comandi.md) — test, build, hook git (`core.hooksPath`), Chrome di debug, `cdp.mjs`, riavvio del viewer, controllo del proxy, Linear
 - [Insidie dell'ambiente](feedback_insidie-ambiente.md) — Blast Radius e `rm`, `gh` non autenticato, lock di Windows su `mv`, CRLF in `mcp_proxy.py`, email git personale, `cdp.mjs` e la prima scheda, risparmio token
