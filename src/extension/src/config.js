@@ -1,5 +1,5 @@
 export const NS = 'toolviewer';
-export const VERSION = '0.6.0';
+export const VERSION = '0.6.1';
 export const DB_NAME = 'keyval-store', STORE = 'keyval', CHAT_PREFIX = 'CHAT_';
 export const SAVE_DEBOUNCE_MS = 500;    // dopo un salvataggio della chat aperta: una sola lettura per raffica di salvataggi
 export const BTN_ID = 'tv-header-btn', PANEL_ID = 'tv-side-panel', STYLE_ID = 'tv-style';

@@ -49,9 +49,13 @@ export function ensurePanel() {
   if (p && p.isConnected && p.parentElement && p.parentElement.dataset.elementId === 'chat-space-background') return;
   const host = document.querySelector('[data-element-id="chat-space-background"]');
   if (!host) return;
-  if (!S.panel) S.panel = buildPanel();
+  const fresh = !S.panel;
+  if (fresh) S.panel = buildPanel();
   host.append(S.panel);                                               // se React ha ricreato la colonna, il pannello torna con le sue card
   applyTheme();
+  // Pannello appena nato: all'avvio di TypingMind la colonna della chat compare dopo setOpen(true), e la lettura fatta
+  // allora non aveva dove disegnare.
+  if (fresh) sync(false);
 }
 
 export function ensureButton() {

@@ -1,6 +1,7 @@
 // Estensione TypingMind: pulsante nella barra della chat che apre un pannello laterale con le chiamate ai tool
 // della chat aperta (input, output, durata), lette dalla chat in IndexedDB.
 // Sorgenti in src/, bundle minificato in dist/ext.js (bun script/build.mjs).
+// v0.6.1: con il pannello aperto prima di un F5 il pannello restava vuoto (nasceva dopo la prima lettura): ora si riempie.
 // v0.6.0: niente viewer :8765 e niente log del proxy: il pannello disegna le chiamate dalla chat (tutti i server MCP) e
 //         la rilegge quando TypingMind la salva (put su IndexedDB). Tolta la modalita' "Tutte".
 // v0.4.1: codice diviso in moduli, nessun cambio di comportamento.
