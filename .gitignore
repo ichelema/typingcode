@@ -1,6 +1,7 @@
 # Repo pubblico: niente dati personali, segreti o codice di terzi
-tm-inspect/chrome-profile/
-tm-inspect/playwright-out/
+test/tm-inspect/chrome-profile/
+test/tm-inspect/playwright-out/
+test/tm-inspect/live.jpg
 logs/
 backups/
 *.tmp

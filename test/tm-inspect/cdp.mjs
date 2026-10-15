@@ -18,7 +18,7 @@ if (!page) { console.error('nessuna scheda aperta'); process.exit(1); }
 
 if (cmd === 'shot') {
   // JPEG a metà risoluzione (vedi shot.mjs); 3° argomento opzionale = selettore da ritagliare
-  const out = arg || 'C:/Download/test/tm-inspect/live.jpg';
+  const out = arg || 'C:/Download/test/test/tm-inspect/live.jpg';
   await shot(page, out, { selector: process.argv[4] });
   console.log(page.url(), '->', out);
 } else if (cmd === 'eval' || cmd === 'evalfile') {
