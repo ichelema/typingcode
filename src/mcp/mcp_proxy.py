@@ -3,7 +3,7 @@ r"""Proxy MCP stdio che registra ogni tools/call in proxy_log.jsonl (v2: registr
 Uso:
   mcp_proxy.py <comando> [argomenti...]   -> avvolge il comando (es. claude mcp serve), ambiente e cwd ereditati
 Variabile opzionale: MCP_PROXY_LOG = percorso del log (default C:\Download\test\logs\proxy_log.jsonl)
-Novita' v2: ogni voce ha pid/started del proxy, rpc_id ed 'extra' (campi di params oltre name/arguments, es. _meta).
+Novita' v2: ogni voce ha pid/started del proxy e rpc_id.
             Gli altri messaggi del client (initialize, tools/list, notifiche) vanno in <log>_meta.jsonl.
 Novita' v4: rotazione. MCP_PROXY_KEEP (default 500 righe), MCP_PROXY_KEEP_META (200), MCP_PROXY_MAX_MB (5),
             MCP_PROXY_ROTATE_EVERY (25 scritture tra un controllo e l'altro). Taglio netto all'avvio.
@@ -199,19 +199,17 @@ def client_to_child():
             msg = json.loads(line)
             if msg.get("method") == "tools/call":
                 p = msg.get("params") or {}
-                extra = {k: v for k, v in p.items() if k not in ("name", "arguments")}
                 args = p.get("arguments") if isinstance(p.get("arguments"), dict) else {}
                 label = guard_check(args.get("command")) if p.get("name") == "Bash" else None
                 if label:
                     reply = guard_reply(msg.get("id"), label, args["command"])
                     write(LOG, {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "tool": "Bash", "arguments": args,
                                 "result": reply["result"], "ms": 0, "pid": PID, "started": STARTED,
-                                "rpc_id": msg.get("id"), "extra": extra, "blocked": label})
+                                "rpc_id": msg.get("id"), "blocked": label})
                     emit(json.dumps(reply, ensure_ascii=False))
                     continue
                 with lock:
-                    pending[msg["id"]] = {"tool": p.get("name"), "arguments": p.get("arguments"),
-                                          "extra": extra, "t0": time.time()}
+                    pending[msg["id"]] = {"tool": p.get("name"), "arguments": p.get("arguments"), "t0": time.time()}
             elif "method" in msg:
                 if HINTS_ON and msg["method"] in ("tools/list", "initialize") and "id" in msg:
                     with lock:
@@ -239,7 +237,7 @@ def child_to_client():
             if req:
                 write(LOG, {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "tool": req["tool"], "arguments": req["arguments"],
                             "result": msg.get("result", msg.get("error")), "ms": int((time.time() - req["t0"]) * 1000),
-                            "pid": PID, "started": STARTED, "rpc_id": msg.get("id"), "extra": req["extra"]})
+                            "pid": PID, "started": STARTED, "rpc_id": msg.get("id")})
                 if slim_result(req["tool"], msg):   # dopo il log: il log tiene la risposta completa
                     line = json.dumps(msg, ensure_ascii=False) + "\n"
         except Exception:

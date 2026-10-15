@@ -51,7 +51,7 @@ html.embed #filters{margin-top:-10px;padding-top:10px}
 <main><div id="filters"><select id="f-tool" title="Filtra per tool"><option value="">Tutti i tool</option></select><select id="f-state" title="Filtra per stato"><option value="">Tutti gli stati</option><option value="ok">ok</option><option value="err">errore</option></select></div><div id="empty">Nessuna chiamata registrata finora.</div><div id="list"></div></main>
 <script>
 const openState = new Map();
-let since = 0, epoch = '', loaded = false, all = [], filterKeys = null, chatId = null, onlyChat = true;
+let since = 0, epoch = '', loaded = false, all = [], filterKeys = null, onlyChat = true;
 const parentOrigin = (location.ancestorOrigins && location.ancestorOrigins[0]) || 'https://www.typingmind.com';
 function el(tag, cls, text){const e=document.createElement(tag); if(cls) e.className=cls; if(text!==undefined) e.textContent=text; return e;}
 function renderOne(e){
@@ -127,7 +127,7 @@ window.addEventListener('message', ev => {
   const d = ev.data;
   if(!d) return;
   if(d.type === 'tm-chat-filter'){
-    filterKeys = Array.isArray(d.keys) ? new Set(d.keys) : null; chatId = d.chatId || null;
+    filterKeys = Array.isArray(d.keys) ? new Set(d.keys) : null;
     if(typeof d.onlyChat === 'boolean') onlyChat = d.onlyChat;     // la scelta resta all'estensione: l'iframe si ricarica a ogni cambio chat
     draw();
   } else if(d.type === 'tm-set-mode'){ onlyChat = !!d.onlyChat; draw(); }
