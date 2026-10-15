@@ -1,6 +1,6 @@
 ---
 name: stato-e-roadmap
-description: stato al 2026-10-15 (estensione 0.4.1 in uso, 0.6.0 di ICH-180 provata e pubblicata, proxy v7, connettore MCP di debug, profilo di debug ancora in C:) e prossimi passi: URL 0.6.0, decisione su log e viewer, ICH-179, ICH-181
+description: stato al 2026-10-15 (estensione 0.4.1 in uso, 0.6.0 di ICH-180 provata e pubblicata, proxy v7, connettore MCP di debug, profilo di debug in D:, C:\Download\test da eliminare) e prossimi passi: URL 0.6.0, decisione su log e viewer, ICH-179, ICH-181
 metadata:
   type: project
 ---
@@ -13,7 +13,7 @@ metadata:
 | Proxy | `src/mcp/mcp_proxy.py` **v7**: log in `logs/`, regole da `src/mcp/core-behavior.md`, riduzione di Edit/Write, blocco dei comandi distruttivi. Lo avvia il connettore MCP di TypingMind |
 | Viewer | `src/mcp/log_viewer.py` su `http://127.0.0.1:8765`, filtro per firma, `/ext.js` = `dist/ext.js` |
 | Repo | `ichelema/typingcode`, pubblico, con tutto il progetto; `references/` come submodule |
-| Chrome di debug | porta 9222, profilo `test/tm-inspect/chrome-profile`; si apre con `bash script/chrome-debug.sh`, che avvia anche il connettore MCP di debug su 50881. **Il Chrome in esecuzione il 15/10 usa il profilo della copia vecchia** (`C:\Download\test\test\tm-inspect\chrome-profile`, aperto alle 06:47): lì stanno la connessione MCP e i plugin attivati il 15/10. Per usare il profilo di `D:`: chiudere Chrome e copiare quel profilo |
+| Chrome di debug | porta 9222, profilo `test/tm-inspect/chrome-profile`; si apre con `bash script/chrome-debug.sh`, che avvia anche il connettore MCP di debug su 50881. Dal 15/10 07:48 usa il profilo di `D:` (copiato da `C:` con connettore 50881, 3 server MCP e plugin attivi per le chat; controllo: `/clients` risponde 200 con 3 client). Il profilo di `D:` delle 06:43 è in `backups/chrome-profile-0643`. `C:\Download\test` non serve più: l'utente la elimina |
 | TypingMind | riassunto automatico del contesto attivato dall'utente nel browser normale |
 | Claude Code | 2.1.300 (il test degli hook in [scoperte](reference_scoperte.md) era sulla 2.1.299) |
 | Linear (team `ICH`, progetto **Typingcode**, fino al 15/10 "Typingmind") | aperte ICH-179, ICH-180 e ICH-181; ICH-175 … ICH-178 (0.5.0) Canceled |
