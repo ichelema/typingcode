@@ -23,7 +23,7 @@ EMAIL="${ID}+${LOGIN}@users.noreply.github.com"   # email noreply: il repo e' pu
 git config user.name  "$LOGIN"                      # solo per questo repo, non globale
 git config user.email "$EMAIL"
 # Solo i file del progetto: .gitignore esclude profilo Chrome, log e backup; references/ contiene submodule (solo URL + commit)
-git add --all -- .gitignore .gitmodules CLAUDE_OPUS.md RECAP_sessione.md \
+git add --all -- .gitignore .gitmodules CLAUDE.md CLAUDE_OPUS.md memory \
   script src dist test/tm-inspect/cdp.mjs test/tm-inspect/shot.mjs references
 git status --short
 git commit -q -m "$MSG" || echo "(nessuna modifica da committare)"

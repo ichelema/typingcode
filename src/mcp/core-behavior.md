@@ -145,10 +145,11 @@ Ogni output resta nel contesto e si ripaga a ogni turno.
 - **URL pubblicati (CDN)**: prima di darli all'utente verificali con `curl` (status 200, `content-type` JavaScript, CORS, contenuto identico al file locale con `cmp`). jsDelivr può rispondere 503 sui commit nuovi: alternativa `rawcdn.githack.com/<utente>/<repo>/<sha>/<file>`.
 - **Browser di test ≠ browser dell'utente**: il Chrome di debug (porta 9222) ha profilo e impostazioni propri. Una verifica lì non conferma lo stato del browser normale: dichiaralo.
 - **Playwright**: prima di cliccare verifica con `evaluate` che gli elementi esistano (lista vuota per filtro = attesa fino al timeout di 30 s).
-- **Orari nel recap e nei log**: prendili da `date +%H:%M`, mai stimati.
+- **Orari nel diario e nei log**: prendili da `date +%H:%M`, mai stimati.
 - **Riavvio di servizi**: dopo aver modificato proxy/viewer, distingui "codice aggiornato" da "processo in esecuzione aggiornato" (PID, `started`) e dillo all'utente.
 
-## Recap
+## Memorie del progetto
 
-- A ogni passo significativo aggiorna `C:/Download/test/RECAP_sessione.md` (sez. 6 stato, 7 prossimi passi, 7c diario) via script.
-- Per riprendere un lavoro leggi prima le sez. 6 e 7 del recap.
+- Per riprendere un lavoro leggi `C:/Download/test/CLAUDE.md` e poi `memory/project_stato-e-roadmap.md`; l'indice di tutte le memorie è `memory/MEMORY.md`.
+- A ogni passo significativo aggiorna `memory/project_stato-e-roadmap.md` e aggiungi una riga in fondo a `memory/project_diario.md`.
+- Un fatto nuovo o cambiato va in un file di `memory/` (prefisso `project_`, `reference_` o `feedback_`) con una riga nell'indice.
