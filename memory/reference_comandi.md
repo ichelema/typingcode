@@ -5,7 +5,7 @@ metadata:
   type: reference
 ---
 
-# Comandi (dalla radice `C:/Download/test`, verificati il 15/10)
+# Comandi (dalla radice `D:/Sviluppo/Progetti/typingcode`, verificati il 15/10)
 
 ```bash
 (cd src/extension && bun test)                 # test delle funzioni pure (4 test)
@@ -20,7 +20,7 @@ Riavvio del viewer (dopo una modifica a `log_viewer.py`):
 
 ```bash
 P=$(netstat -ano | grep LISTEN | grep '127.0.0.1:8765 ' | awk '{print $NF}'); taskkill //PID $P //F
-python3 -c "import subprocess; subprocess.Popen([r'D:\msys64\ucrt64\bin\pythonw.exe', r'C:\Download\test\src\mcp\log_viewer.py'], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=0x08000208, close_fds=True)"
+python3 -c "import subprocess; subprocess.Popen([r'D:\msys64\ucrt64\bin\pythonw.exe', r'D:\Sviluppo\Progetti\typingcode\src\mcp\log_viewer.py'], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=0x08000208, close_fds=True)"
 ```
 
 Controlli:

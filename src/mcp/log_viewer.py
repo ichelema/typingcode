@@ -7,9 +7,9 @@ import json, os, hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-LOG = os.environ.get("VIEWER_LOG", r"C:\Download\test\logs\proxy_log.jsonl")   # override solo per i test
+LOG = os.environ.get("VIEWER_LOG", r"D:\Sviluppo\Progetti\typingcode\logs\proxy_log.jsonl")   # override solo per i test
 PORT = int(os.environ.get("VIEWER_PORT", "8765"))
-EXT = "C:/Download/test/dist/ext.js"   # bundle generato da src/extension/build.mjs
+EXT = "D:/Sviluppo/Progetti/typingcode/dist/ext.js"   # bundle generato da src/extension/build.mjs
 
 PAGE = """<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><title>Tool output viewer</title>
 <script>

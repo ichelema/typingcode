@@ -1,6 +1,6 @@
 ---
 name: struttura-cartella
-description: cosa contiene ogni file e cartella di C:/Download/test (src/mcp, src/extension, dist, script, test/tm-inspect, memory, logs, backups, references) e cosa è escluso da git
+description: cosa contiene ogni file e cartella di D:/Sviluppo/Progetti/typingcode (src/mcp, src/extension, dist, script, test/tm-inspect, memory, logs, backups, references) e cosa è escluso da git
 metadata:
   type: reference
 ---

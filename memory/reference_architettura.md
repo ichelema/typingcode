@@ -12,7 +12,7 @@ TypingMind (browser)
   └─ connettore @typingmind/mcp 1.4.1 su :50880  (avviato da start_typingmind_mcp.ahk, systray)
        └─ server "claude_code": env.exe → zsh -l → python3 src/mcp/mcp_proxy.py claude mcp serve
             ├─ inoltra tutto a `claude mcp serve` (gli strumenti dell'assistente)
-            ├─ registra ogni tools/call in C:\Download\test\logs\proxy_log.jsonl
+            ├─ registra ogni tools/call in D:\Sviluppo\Progetti\typingcode\logs\proxy_log.jsonl
             └─ all'avvio lancia il viewer se la porta 8765 è libera
 
 src/mcp/log_viewer.py  →  http://127.0.0.1:8765  (pagina live + /log + /ext.js)
@@ -25,11 +25,11 @@ estensione TypingMind 0.4.1 (`dist/ext.js` su githack, repo `ichelema/typingcode
 Ultimo argomento (percorso cambiato il 15/10: `mcp_proxy.py` è in `src/mcp/`):
 
 ```
-export PATH="$HOME/.local/bin:$PATH"; exec python3 C:/Download/test/src/mcp/mcp_proxy.py claude mcp serve 2>>/e/AI/Claude/mcp_claude_err.log
+export PATH="$HOME/.local/bin:$PATH"; exec python3 D:/Sviluppo/Progetti/typingcode/src/mcp/mcp_proxy.py claude mcp serve 2>>/e/AI/Claude/mcp_claude_err.log
 ```
 
 Il server `playwright` usa `--cdp-endpoint http://127.0.0.1:9222` (Chrome di debug) e
-`--output-dir C:/Download/test/test/tm-inspect/playwright-out`.
+`--output-dir D:/Sviluppo/Progetti/typingcode/test/tm-inspect/playwright-out`.
 
 Variabili opzionali (come `NOME=valore` negli args di env.exe, prima di zsh.exe):
 - `MCP_PROXY_NO_VIEWER=1` → il proxy non avvia il viewer

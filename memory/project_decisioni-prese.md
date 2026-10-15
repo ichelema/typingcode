@@ -22,7 +22,7 @@ metadata:
   ridistribuzione, `typingmind-extensions/` e `simple-cors-proxy/` non hanno licenza. Nel repo
   stanno solo URL e commit.
 - **ICH-179 resta aperta** come ricontrollo degli hook su una versione nuova di Claude Code.
-- **Sviluppo solo da Claude Code in `C:/Download/test`; TypingMind è produzione** (15/10): le regole
+- **Sviluppo solo da Claude Code in `D:/Sviluppo/Progetti/typingcode`; TypingMind è produzione** (15/10): le regole
   iniettate dal proxy (`src/mcp/core-behavior.md` e la sintesi in `mcp_proxy.py`) non parlano delle
   memorie di questo progetto. `CLAUDE.md` e `memory/` servono solo alle sessioni di sviluppo qui.
 - **Git lo gestisce l'utente** (15/10): niente script che fanno `git add`, commit o push

@@ -2,7 +2,7 @@ r"""Proxy MCP stdio che registra ogni tools/call in proxy_log.jsonl (v2: registr
 
 Uso:
   mcp_proxy.py <comando> [argomenti...]   -> avvolge il comando (es. claude mcp serve), ambiente e cwd ereditati
-Variabile opzionale: MCP_PROXY_LOG = percorso del log (default C:\Download\test\logs\proxy_log.jsonl)
+Variabile opzionale: MCP_PROXY_LOG = percorso del log (default D:\Sviluppo\Progetti\typingcode\logs\proxy_log.jsonl)
 Novita' v2: ogni voce ha pid/started del proxy e rpc_id.
             Gli altri messaggi del client (initialize, tools/list, notifiche) vanno in <log>_meta.jsonl.
 Novita' v4: rotazione. MCP_PROXY_KEEP (default 500 righe), MCP_PROXY_KEEP_META (200), MCP_PROXY_MAX_MB (5),
@@ -10,7 +10,7 @@ Novita' v4: rotazione. MCP_PROXY_KEEP (default 500 righe), MCP_PROXY_KEEP_META (
 """
 import sys, os, re, json, subprocess, threading, time, shutil
 
-LOG = os.environ.get("MCP_PROXY_LOG", r"C:\Download\test\logs\proxy_log.jsonl")
+LOG = os.environ.get("MCP_PROXY_LOG", r"D:\Sviluppo\Progetti\typingcode\logs\proxy_log.jsonl")
 META = os.path.splitext(LOG)[0] + "_meta.jsonl"
 os.makedirs(os.path.dirname(LOG), exist_ok=True)   # senza cartella write() ignora l'errore e il log si perde
 PID = os.getpid()
@@ -30,7 +30,7 @@ pending, lock = {}, threading.Lock()
 # v5: regole per risparmiare token, iniettate nelle risposte del server (disattivabili con MCP_PROXY_NO_HINTS=1).
 # Vanno in tools/list (descrizione dei tool: il client le legge sempre) e in initialize.instructions.
 HINTS_ON = os.environ.get("MCP_PROXY_NO_HINTS") != "1"
-RULES_FILE = os.environ.get("MCP_PROXY_RULES", "C:/Download/test/src/mcp/core-behavior.md")
+RULES_FILE = os.environ.get("MCP_PROXY_RULES", "D:/Sviluppo/Progetti/typingcode/src/mcp/core-behavior.md")
 try:
     with open(RULES_FILE, encoding="utf-8") as _f:
         FULL_RULES = _f.read().strip()
@@ -257,7 +257,7 @@ def ensure_viewer():
         if not os.path.exists(py):
             py = r"D:\msys64\ucrt64\bin\pythonw.exe"
         flags = 0x00000008 | 0x00000200 | 0x08000000   # DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW
-        subprocess.Popen([py, r"C:\Download\test\src\mcp\log_viewer.py"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+        subprocess.Popen([py, r"D:\Sviluppo\Progetti\typingcode\src\mcp\log_viewer.py"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                          stderr=subprocess.DEVNULL, creationflags=flags, close_fds=True)
     except Exception:
         pass

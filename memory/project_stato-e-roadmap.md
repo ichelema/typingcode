@@ -31,7 +31,7 @@ Pid e orari dei processi cambiano a ogni avvio: trovali con i comandi in [comand
 3. **ICH-179**: ricontrollare gli hook `PreToolUse`/`PostToolUse` con `claude mcp serve` sulla
    versione attuale di Claude Code (ultimo test sulla 2.1.299).
 4. **ICH-181**: percorsi relativi alla radice del progetto e supporto Linux per proxy, viewer,
-   `chrome-debug.sh` e `cdp.mjs` (oggi funzionano solo in `C:\Download\test` su Windows; su Linux il
+   `chrome-debug.sh` e `cdp.mjs` (oggi funzionano solo in `D:\Sviluppo\Progetti\typingcode` su Windows; su Linux il
    viewer non parte, senza avvisi). Risolve anche il limite del worktree per ICH-180.
 5. Idee opzionali: "errore" nel viewer solo per i fallimenti veri (oggi un Bash con stderr non vuoto
    conta come errore); stato aperto/chiuso delle chiamate conservato al cambio chat.
