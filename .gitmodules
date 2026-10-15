@@ -1,0 +1,13 @@
+[submodule "references/simple-cors-proxy"]
+	path = references/simple-cors-proxy
+	url = https://github.com/obeone/simple-cors-proxy
+[submodule "references/typingmind-contentshield"]
+	path = references/typingmind-contentshield
+	url = https://github.com/itcon-pty-au/typingmind-contentshield.git
+[submodule "references/typingmind-extensions"]
+	path = references/typingmind-extensions
+	url = https://github.com/augustx28/typingmind-extensions.git
+[submodule "references/typingmind"]
+	path = references/typingmind
+	url = https://github.com/TypingMind/typingmind
+	shallow = true

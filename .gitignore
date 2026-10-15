@@ -5,5 +5,3 @@ test/tm-inspect/live.jpg
 logs/
 backups/
 *.tmp
-# typingmind/ ha licenza proprietaria (ridistribuzione vietata), le altre copie sono solo da studiare
-references/
