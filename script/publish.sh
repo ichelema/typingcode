@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Test e build dell'estensione (src/extension -> dist/ext.js), commit e push del progetto nel repo GitHub pubblico
 # typingcode; stampa gli URL di dist/ext.js fissati al commit.
-# Eseguilo dal terminale in cui gh e' autenticato. Uso: bash publish.sh ["messaggio di commit"]
+# Eseguilo dal terminale in cui gh e' autenticato. Uso: bash script/publish.sh ["messaggio di commit"]
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."                              # radice del progetto
 
 REPO="typingcode"
 MSG="${1:-Update typingcode}"
@@ -13,7 +13,7 @@ if ! gh auth status >/dev/null 2>&1; then
 fi
 
 (cd src/extension && bun test >/dev/null 2>&1) || { echo "ERRORE: test falliti (cd src/extension && bun test)"; exit 1; }
-(cd src/extension && bun build.mjs)
+bun script/build.mjs
 
 LOGIN=$(gh api user -q .login)
 ID=$(gh api user -q .id)
@@ -23,8 +23,8 @@ EMAIL="${ID}+${LOGIN}@users.noreply.github.com"   # email noreply: il repo e' pu
 git config user.name  "$LOGIN"                      # solo per questo repo, non globale
 git config user.email "$EMAIL"
 # Solo i file del progetto: .gitignore esclude profilo Chrome, log, backup e le copie di terzi in references/
-git add --all -- .gitignore publish.sh CLAUDE_OPUS.md core-behavior.md RECAP_sessione.md mcp_proxy.py log_viewer.py \
-  src dist tm-inspect/cdp.mjs tm-inspect/shot.mjs references/README.md
+git add --all -- .gitignore CLAUDE_OPUS.md core-behavior.md RECAP_sessione.md mcp_proxy.py log_viewer.py \
+  script src dist tm-inspect/cdp.mjs tm-inspect/shot.mjs references/README.md
 git status --short
 git commit -q -m "$MSG" || echo "(nessuna modifica da committare)"
 

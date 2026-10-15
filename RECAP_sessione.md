@@ -49,9 +49,9 @@ Variabili opzionali (aggiungibili come `NOME=valore` negli args di env.exe, prim
 | `core-behavior.md` | regole di comportamento iniettate dal proxy |
 | `RECAP_sessione.md` | questo file |
 | `logs/proxy_log.jsonl`, `logs/proxy_log_meta.jsonl` | log (in chiaro), ruotati dal proxy; il viewer legge solo `proxy_log.jsonl`; il meta serve solo per la diagnosi a mano. Il proxy crea `logs/` se manca |
-| `src/extension/` | (fino al 15/10 `ext-repo/`, con un suo `.git` ora eliminato) estensione: sorgenti in `src/` (10 moduli), `build.mjs` (Bun) che scrive in `dist/` nella radice, test `test/sig.test.js`, `README.md` |
+| `src/extension/` | (fino al 15/10 `ext-repo/`, con un suo `.git` ora eliminato) estensione: sorgenti in `src/` (10 moduli), test `test/sig.test.js` (`bun test` da `src/extension`), `README.md` |
 | `dist/` | bundle minificato `ext.js` + `.map` (generato, committato: è il file servito da githack) |
-| `publish.sh`, `.gitignore` | pubblicazione del progetto nel repo pubblico `ichelema/typingcode`; `.gitignore` esclude `tm-inspect/chrome-profile/`, `playwright-out/`, `logs/`, `backups/`, `references/*` tranne il README |
+| `script/build.mjs`, `script/publish.sh`, `.gitignore` | build (`bun script/build.mjs`: `src/extension/src/` → `dist/`) e pubblicazione del progetto nel repo pubblico `ichelema/typingcode` (`bash script/publish.sh "msg"`); `.gitignore` esclude `tm-inspect/chrome-profile/`, `playwright-out/`, `logs/`, `backups/`, `references/*` tranne il README |
 | `.git` | repo git dell'intero progetto (dal 15/10), email `noreply` impostata nel repo (la globale è personale: non usarla qui) |
 | `backups/` | vuota dopo la pulizia del 15/10 |
 | `tm-inspect/` | test con Chrome di debug: `cdp.mjs` (eval/shot), `shot.mjs` (screenshot leggeri), `chrome-profile/` (profilo del Chrome di debug, ~220 MB, NON cancellare: contiene il login TypingMind), `playwright-out/` (output di Playwright MCP) |
@@ -67,7 +67,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 ## 4. Estensione TypingMind
 
 - Repo pubblico temporaneo: `https://github.com/ichelema/tm-tool-viewer-ext-tmp` (commit con email noreply `5004160+ichelema@users.noreply.github.com`).
-- Pubblicazione: `bash C:/Download/test/publish.sh` (da un terminale dove `gh` è autenticato; nella shell dell'assistente `gh` NON è autenticato).
+- Pubblicazione: `bash C:/Download/test/script/publish.sh` (da un terminale dove `gh` è autenticato; nella shell dell'assistente `gh` NON è autenticato).
 - **URL da installare (v0.3.0, verificato: HTTP 200, `application/javascript`, CORS `*`, identico al file locale):**
   ```
   https://cdn.jsdelivr.net/gh/ichelema/tm-tool-viewer-ext-tmp@d9e397005f392cc65e370a4ea9eb48bc0ce8aeca/ext.js
@@ -176,6 +176,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 | 15/10 05:03 | log spostato in `logs/proxy_log.jsonl` (default in `mcp_proxy.py:13` e `log_viewer.py:10`; il proxy crea `logs/` all'avvio); `proxy_log_meta.jsonl` eliminato (si ricrea in `logs/`). Backup: `backups/mcp_proxy.py.bak2`, `backups/log_viewer.py.bak`. Viewer riavviato (pid 43588): 457 voci lette | primo avvio del proxy con il percorso nuovo: alla prossima chiamata a un tool |
 | 15/10 05:08 | `ext-repo/` spostata in `src/extension/`: `mv` rifiutato da Windows (cartella aperta da un programma nativo, non identificato), quindi copia identica (`diff -rq`, `.git` compreso) + eliminazione di `ext-repo` (approvata dall'utente). `log_viewer.py:12` aggiornato (backup `backups/log_viewer.py.bak2`), viewer riavviato (pid 27496): `/ext.js` 200 e identico, 457 voci. Commento del test aggiornato: commit `1196972`, push OK | — |
 | 15/10 05:20 | nuovo repo per tutto il progetto: `git init` in `C:/Download/test` (email `noreply` locale), `.gitignore` per i dati personali e il codice di terzi, `dist/` nella radice (`build.mjs` aggiornato, bundle identico), `publish.sh` nella radice per `typingcode`, `log_viewer.py:12` → `dist/ext.js` (backup `backups/log_viewer.py.bak3`, viewer pid 42800), `src/extension/.git` eliminato (cronologia dell'estensione persa, approvato). Commit iniziale locale `022de82` (25 file). Nessun segreto trovato nei file pubblicati | l'utente: elimina `src/extension/publish.sh` (rm rifiutato), esegue `bash publish.sh`, mette il nuovo URL, poi elimina il vecchio repo |
+| 15/10 05:25 | l'utente ha spostato `build.mjs` e `publish.sh` in `script/` (e ha eliminato il vecchio `src/extension/publish.sh`): `build.mjs` usa la radice (`script/..`), `publish.sh` fa `cd` nella radice, chiama `bun script/build.mjs` e aggiunge `script/`. Controlli: 4 test, build da due cartelle, codice del bundle identico (cambia solo `//# debugId`), sintassi e `git add --dry-run` OK, viewer OK | l'utente: `bash script/publish.sh`, nuovo URL in TypingMind, poi elimina il vecchio repo |
 | 14/10 23:14 | proxy v7: guard comandi distruttivi (rm -rf, git push --force, git reset --hard) con errore leggibile + sblocco `# proxy:allow`; stdout serializzato con lock (ora scrivono due thread); test e2e server finto PASS 22/22 | **attivo solo dopo riavvio del connettore** |
 
 ## 8. Promemoria tecnici

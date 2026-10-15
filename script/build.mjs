@@ -1,12 +1,13 @@
-// Bundle: src/main.js -> <progetto>/dist/ext.js (IIFE minificato + source map). Uso: bun build.mjs [--watch]
+// Bundle: src/extension/src/main.js -> dist/ext.js (IIFE minificato + source map). Uso: bun script/build.mjs [--watch]
 import { watch } from 'node:fs';
 
-const root = import.meta.dir;
-const out = `${root}/../../dist`;   // dist/ nella radice del progetto: e' il file servito da githack
+const root = `${import.meta.dir}/..`;               // radice del progetto
+const src = `${root}/src/extension/src`;
+const out = `${root}/dist`;   // dist/ nella radice del progetto: e' il file servito da githack
 async function build() {
   const t0 = performance.now();
   const r = await Bun.build({
-    entrypoints: [`${root}/src/main.js`],
+    entrypoints: [`${src}/main.js`],
     outdir: out,
     naming: 'ext.js',
     format: 'iife',
@@ -22,7 +23,7 @@ async function build() {
 
 const ok = await build();
 if (process.argv.includes('--watch')) {
-  console.log('watch su src/ (Ctrl+C per uscire)');
+  console.log('watch su src/extension/src/ (Ctrl+C per uscire)');
   let t = 0;
-  watch(`${root}/src`, () => { clearTimeout(t); t = setTimeout(build, 100); });
+  watch(src, () => { clearTimeout(t); t = setTimeout(build, 100); });
 } else process.exit(ok ? 0 : 1);

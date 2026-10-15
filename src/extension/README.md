@@ -18,15 +18,17 @@ Fa parte del repo `typingcode`; il bundle pubblicato è `dist/ext.js` nella radi
 | `src/view.js` | tema, intestazione, messaggi al viewer |
 | `src/sync.js` | sincronizzazione con il viewer e controllo che risponda |
 | `src/ui.js` | pulsante e pannello |
-| `../../dist/ext.js` | bundle minificato nella radice del progetto (generato, committato: è il file servito dalla CDN) |
+| `../../dist/ext.js` | bundle minificato nella radice del progetto (generato da `script/build.mjs`, committato: è il file servito dalla CDN) |
 
 ## Comandi
 
 ```bash
-bun test                 # test delle funzioni pure
-bun build.mjs            # src/ -> ../../dist/ext.js (+ ext.js.map)
-bun build.mjs --watch    # ricompila a ogni modifica
-bash ../../publish.sh "msg"   # test + build + commit + push del progetto, stampa gli URL fissati al commit
+# da src/extension
+bun test                        # test delle funzioni pure
+# dalla radice del progetto
+bun script/build.mjs            # src/extension/src/ -> dist/ext.js (+ ext.js.map)
+bun script/build.mjs --watch    # ricompila a ogni modifica
+bash script/publish.sh "msg"    # test + build + commit + push del progetto, stampa gli URL fissati al commit
 ```
 
 Durante lo sviluppo il viewer locale serve il bundle anche su `http://127.0.0.1:8765/ext.js`.
