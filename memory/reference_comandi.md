@@ -8,13 +8,18 @@ metadata:
 # Comandi (dalla radice `D:/Sviluppo/Progetti/typingcode`, verificati il 15/10)
 
 ```bash
-(cd src/extension && bun test)                 # test delle funzioni pure (4 test)
+(cd src/extension && bun test)                 # test delle funzioni pure (9 test, campione test/chat-sample.json)
 bun script/build.mjs [--watch]                 # src/extension/src/ -> dist/ext.js (+ .map)
 git config core.hooksPath script/hooks         # una volta dopo il clone: attiva pre-commit e pre-push
-bash script/chrome-debug.sh                    # Chrome di debug su :9222 (non apre una seconda istanza)
+bash script/chrome-debug.sh                    # connettore MCP di debug su :50881 + Chrome di debug su :9222 (nessuna seconda istanza)
 node test/tm-inspect/cdp.mjs eval "<js>"       # esegue JS nella prima scheda del Chrome 9222
+node test/tm-inspect/cdp.mjs evalfile <file>   # come eval, codice da file (es. dist/ext.js dopo __toolviewer_cleanup())
 node test/tm-inspect/cdp.mjs shot [file.jpg]   # screenshot leggero
 ```
+
+Connettore di debug: token in `test/tm-inspect/mcp-token` (fuori da git; lo mostra TypingMind > MCP nel
+profilo di debug), log in `logs/mcp-connector-debug.log`, controllo con `netstat -ano | grep 50881`.
+Nel profilo di debug i server MCP vanno attivati anche per le chat (Plugins), altrimenti il modello non li vede.
 
 Riavvio del viewer (dopo una modifica a `log_viewer.py`):
 

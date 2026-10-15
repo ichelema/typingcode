@@ -5,3 +5,4 @@ test/tm-inspect/live.jpg
 logs/
 backups/
 *.tmp
+test/tm-inspect/mcp-token

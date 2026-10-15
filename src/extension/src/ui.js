@@ -1,11 +1,11 @@
 // Pulsante nella barra della chat e pannello laterale.
 import { BTN_ID, PANEL_ID, K_OPEN, K_WIDTH, DEF_W } from './config.js';
 import { S } from './state.js';
-import { clampW } from './sig.js';
+import { clampW } from './calls.js';
 import { lsGet, lsSet } from './util.js';
-import { ICON_TOOLS, ICON_RELOAD, ICON_CLOSE } from './style.js';
-import { nativeBtn, applyTheme, setMode } from './view.js';
-import { check, startPolling, stopPolling } from './sync.js';
+import { LIST_CSS, ICON_TOOLS, ICON_RELOAD, ICON_CLOSE } from './style.js';
+import { nativeBtn, applyTheme } from './view.js';
+import { sync } from './sync.js';
 
 function buildPanel() {
   const p = document.createElement('div');
@@ -13,21 +13,19 @@ function buildPanel() {
   p.style.setProperty('--tv-w', clampW(parseInt(lsGet(K_WIDTH, DEF_W), 10)) + 'px');
   p.innerHTML = `<div class="tv-resize" title="Trascina per ridimensionare"></div>
 <div class="tv-head"><div class="tv-titles"><div class="tv-title">Tool output</div><div class="tv-sub"><span class="tv-chat"></span><span class="tv-count"></span></div></div>
-<div class="tv-seg" role="group" aria-label="Chiamate da mostrare" hidden>
-<button type="button" data-mode="chat" data-tooltip-id="global" data-tooltip-content="Solo le chiamate di questa chat">Chat</button>
-<button type="button" data-mode="all" data-tooltip-id="global" data-tooltip-content="Tutte le chiamate registrate">Tutte</button></div>
-<button type="button" class="tv-icon" data-act="reload" aria-label="Ricarica" data-tooltip-id="global" data-tooltip-content="Ricarica il viewer">${ICON_RELOAD}</button>
+<button type="button" class="tv-icon" data-act="reload" aria-label="Ricarica" data-tooltip-id="global" data-tooltip-content="Rileggi la chat">${ICON_RELOAD}</button>
 <button type="button" class="tv-icon" data-act="close" aria-label="Chiudi" data-tooltip-id="global" data-tooltip-content="Chiudi">${ICON_CLOSE}</button></div>
-<div class="tv-status">Controllo del viewer...</div><iframe title="Tool output"></iframe>`;
-  S.frame = p.querySelector('iframe'); S.statusEl = p.querySelector('.tv-status');
-  S.titleEl = p.querySelector('.tv-title'); S.chatEl = p.querySelector('.tv-chat'); S.countEl = p.querySelector('.tv-count');
-  S.segEl = p.querySelector('.tv-seg');
-  for (const b of S.segEl.querySelectorAll('button')) {
-    b.setAttribute('aria-pressed', String((b.dataset.mode === 'chat') === S.onlyChat));
-    b.onclick = () => setMode(b.dataset.mode === 'chat');
-  }
+<div class="tv-list"></div>`;
+  // Lista in uno shadow root: gli osservatori DOM delle altre estensioni non vedono le card (163 card nel documento =
+  // long task da 118-143 ms, Chrome di debug 15/10/2026) e il CSS di TypingMind non le tocca.
+  // data-sentry-block: Sentry Session Replay di TypingMind (rrweb) non registra gli output dei tool e non serializza le card;
+  // va ripetuto dentro lo shadow root perche' rrweb cerca il blocco con closest(), che non esce dallo shadow root.
+  p.setAttribute('data-sentry-block', '');
+  const root = p.querySelector('.tv-list').attachShadow({ mode: 'open' });
+  root.innerHTML = `<style>${LIST_CSS}</style><div data-sentry-block></div>`;
+  S.listEl = root.lastChild; S.chatEl = p.querySelector('.tv-chat'); S.countEl = p.querySelector('.tv-count');
   p.querySelector('[data-act="close"]').onclick = () => setOpen(false);
-  p.querySelector('[data-act="reload"]').onclick = () => { S.online = false; check(); };
+  p.querySelector('[data-act="reload"]').onclick = () => sync(true);
   const grip = p.querySelector('.tv-resize');                         // ridimensionamento trascinando il bordo sinistro
   grip.addEventListener('pointerdown', (e) => {
     e.preventDefault();
@@ -52,7 +50,7 @@ export function ensurePanel() {
   const host = document.querySelector('[data-element-id="chat-space-background"]');
   if (!host) return;
   if (!S.panel) S.panel = buildPanel();
-  host.append(S.panel);                                               // se React ha ricreato la colonna, l'iframe si ricarica da solo
+  host.append(S.panel);                                               // se React ha ricreato la colonna, il pannello torna con le sue card
   applyTheme();
 }
 
@@ -82,14 +80,7 @@ export function setOpen(open) {
   if (open) {
     const nb = nativeBtn();                                           // un solo pannello a destra: chiude quello nativo
     if (nb && nb.getAttribute('aria-pressed') === 'true') nb.click();
-    S.online = false;
     ensurePanel();
-    startPolling();
-  } else {
-    stopPolling();
-    S.online = false;
-    if (S.frame) { S.frame.src = 'about:blank'; S.frame.style.display = 'none'; }
-    if (S.statusEl) { S.statusEl.style.display = 'block'; S.statusEl.textContent = 'Controllo del viewer...'; }
-    if (S.panel) S.panel.remove();
-  }
+    sync(false);                                                      // a pannello chiuso i salvataggi non vengono letti
+  } else if (S.panel) S.panel.remove();
 }

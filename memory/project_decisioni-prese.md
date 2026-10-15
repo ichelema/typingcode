@@ -15,6 +15,12 @@ metadata:
   l'utente: **prima di implementare, chiedere se il limite dà fastidio davvero.**
 - **Prossimo piano: pannello che legge dalla chat** (ICH-180). La parte di log e viewer del proxy
   resta finché il prototipo non funziona.
+- **0.6.0, scelte del piano approvato il 15/10**: segnale delle chiamate nuove da
+  `IDBObjectStore.put` (non dal `MutationObserver` della issue: la riga del tool non ha un selettore
+  stabile); lettura sul main thread (11–18 ms, niente Worker); niente filtri per tool/stato e niente
+  modalità "Tutte"; versione 0.6.0 perché la 0.5.0 è quella annullata. Scelte nate dalle misure: lista in
+  uno shadow root (le altre estensioni elaborano le card nel DOM: 118–143 ms) e `data-sentry-block`
+  (privacy degli output e costo di rrweb).
 - **Repo**: tutto il progetto in `ichelema/typingcode`, **pubblico** (githack serve solo repo
   pubblici). Email `noreply` impostata nel repo (la globale è personale). `.gitignore` esclude
   profilo Chrome, log, backup e `live.jpg`.

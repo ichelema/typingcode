@@ -1,6 +1,6 @@
 ---
 name: estensione
-description: repo typingcode, URL githack in uso (9fde5d3), pubblicazione, versioni 0.1–0.5.0, filtro per chat con firma, diagnostica ed emergenza
+description: repo typingcode, URL githack in uso (9fde5d3, 0.4.1), pubblicazione, versioni 0.1–0.6.0, funzionamento della 0.6.0 (chiamate dalla chat in IndexedDB), prova senza pubblicare, diagnostica ed emergenza
 metadata:
   type: reference
 ---
@@ -29,16 +29,28 @@ metadata:
   - **0.4.1 (in uso)**: codice diviso in moduli (`src/extension/src/`) + bundle minificato `dist/ext.js`
   - 0.5.0 (annullata il 15/10): un processo MCP per chat; chiamate delle chat in background al
     processo sbagliato (ICH-178)
-- Diagnostica in console: `window.__toolviewer_stats` → `reads`, `lastMs`, `maxMs`, `lastAt`.
+  - **0.6.0 (15/10, ICH-180, provata nel Chrome di debug)**: niente iframe, viewer e log; chiamate di
+    tutti i server MCP lette dalla chat in IndexedDB. Fino al cambio dell'URL resta in uso la 0.4.1
+- Diagnostica in console: `window.__toolviewer_stats` → `reads`, `lastMs`, `maxMs`, `lastAt` (dalla
+  0.6.0: lettura + estrazione, tempo totale compresa l'attesa se la pagina è occupata).
 - Emergenza: `https://www.typingmind.com/?safe_mode=1` carica TypingMind senza estensioni.
+- Prova senza pubblicare (Chrome di debug): `cdp.mjs eval "window.__toolviewer_cleanup()"`, poi
+  `cdp.mjs evalfile D:/Sviluppo/Progetti/typingcode/dist/ext.js`; dopo un F5 torna la versione installata.
 
-## Come funziona il filtro per chat
+## Come funziona la 0.6.0
 
-- Id chat dall'URL `#chat=<id>` → chiave IndexedDB `keyval-store` / `keyval` / `CHAT_<id>`.
-- Le chiamate stanno in `messages[i].tool_calls[0].function.arguments` (stringa JSON) e
-  `messages[i].pluginResponse.inputParams`.
-- Chiave di abbinamento = `JSON.stringify([command, description || ""])` per Bash, JSON degli argomenti
-  con chiavi ordinate per gli altri tool (stessa formula in Python `sig()` e JS `sigOf()`).
-- Limite: due chat con lo stesso comando e la stessa descrizione vedono entrambe la chiamata. Le
-  chiamate delle chat in background vanno invece nella chat giusta, perché TypingMind le salva nella
-  chat che le ha generate.
+- Id chat dall'URL `#chat=<id>` → chiave IndexedDB `keyval-store` / `keyval` / `CHAT_<id>`, sola lettura.
+- `callsFromChat()` (`src/calls.js`): una voce per `tool_calls[].id`; output, errore e durata dal
+  messaggio `role: "tool"` con lo stesso `tool_call_id`; senza risposta = "in corso". Bash: `stdout` e
+  `stderr` separati. Edit/Write: diff da `structuredPatch`; Write `create` con contenuto omesso dal
+  proxy → righe dagli argomenti della chiamata. Errore = `format: "error"`, `stderr` non vuoto,
+  `interrupted`, o testo `Exit code N` / `Tool … input is invalid` / `<tool_use_error>` / `### Error`.
+- Letture solo su segnale: apertura del pannello, cambio chat, scheda visibile, Ricarica, `put` della
+  chat aperta (debounce 500 ms). I salvataggi delle chat in background non toccano il pannello.
+- Card riusate per `tool_call_id`: a ogni lettura si ricreano solo le card nuove o appena finite; il
+  corpo di una card si costruisce alla prima apertura.
+- Lista in uno shadow root con `data-sentry-block` (anche sul pannello): le altre estensioni non la
+  elaborano, il CSS di TypingMind non la tocca, Sentry Replay non registra gli output.
+- Misure (Chrome di debug, `ROa5e2T-v_`, 163 chiamate): lettura + estrazione 11–18 ms; disegno
+  completo (apertura chat, Ricarica) = un task da 80–100 ms, di cui 72 ms accessibilità di Chrome; una
+  chiamata nuova crea una sola card.

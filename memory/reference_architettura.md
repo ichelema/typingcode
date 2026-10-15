@@ -16,8 +16,13 @@ TypingMind (browser)
             └─ all'avvio lancia il viewer se la porta 8765 è libera
 
 src/mcp/log_viewer.py  →  http://127.0.0.1:8765  (pagina live + /log + /ext.js)
-estensione TypingMind 0.4.1 (`dist/ext.js` su githack, repo `ichelema/typingcode`) → pannello laterale
+estensione TypingMind 0.4.1 (in uso, `dist/ext.js` su githack, repo `ichelema/typingcode`) → pannello laterale
    con il viewer in un iframe, filtrato sulle chiamate della chat aperta (lette in sola lettura da IndexedDB)
+estensione 0.6.0 (ICH-180) → pannello laterale che disegna le chiamate direttamente dalla chat in
+   IndexedDB: non usa né il log né il viewer
+
+Chrome di debug (porta 9222) → connettore di debug @typingmind/mcp su 127.0.0.1:50881 (avviato da
+   script/chrome-debug.sh, token in test/tm-inspect/mcp-token, fuori da git) → stessi server MCP
 ```
 
 ## Configurazione MCP del server `claude_code`
