@@ -18,20 +18,20 @@ Obiettivo: mostrarli automaticamente all'utente, senza che l'assistente debba ri
 ```
 TypingMind (browser)
   └─ connettore @typingmind/mcp  (avviato da start_typingmind_mcp.ahk, systray)
-       └─ server "claude_code": env.exe → zsh -l → python3 mcp_proxy.py claude mcp serve
+       └─ server "claude_code": env.exe → zsh -l → python3 src/mcp/mcp_proxy.py claude mcp serve
             ├─ inoltra tutto a `claude mcp serve` (gli strumenti dell'assistente)
             ├─ registra ogni tools/call in C:\Download\test\logs\proxy_log.jsonl
             └─ all'avvio lancia il viewer se la porta 8765 è libera
 
-log_viewer.py  →  http://127.0.0.1:8765  (pagina live + /log + /ext.js)
+src/mcp/log_viewer.py  →  http://127.0.0.1:8765  (pagina live + /log + /ext.js)
 estensione TypingMind (ext.js su jsDelivr) → pannello laterale (v0.4.0; nella 0.3.0 riquadro in basso a destra) con il viewer in un iframe,
    filtrato sulle chiamate della chat aperta (lette in sola lettura da IndexedDB)
 ```
 
-### Configurazione MCP attuale (non va modificata)
-Il server `claude_code` ha come ultimo argomento:
+### Configurazione MCP attuale
+Il server `claude_code` ha come ultimo argomento (percorso cambiato il 15/10: `mcp_proxy.py` è in `src/mcp/`):
 ```
-export PATH="$HOME/.local/bin:$PATH"; exec python3 C:/Download/test/mcp_proxy.py claude mcp serve 2>>/e/AI/Claude/mcp_claude_err.log
+export PATH="$HOME/.local/bin:$PATH"; exec python3 C:/Download/test/src/mcp/mcp_proxy.py claude mcp serve 2>>/e/AI/Claude/mcp_claude_err.log
 ```
 Variabili opzionali (aggiungibili come `NOME=valore` negli args di env.exe, prima di zsh.exe):
 - `MCP_PROXY_NO_VIEWER=1` → il proxy non avvia il viewer
@@ -44,9 +44,9 @@ Variabili opzionali (aggiungibili come `NOME=valore` negli args di env.exe, prim
 
 | Percorso | Ruolo |
 |---|---|
-| `mcp_proxy.py` | **v7** in uso: proxy MCP + log + avvio viewer + rotazione + iniezione regole da `core-behavior.md` (`MCP_PROXY_RULES`, disattivabile con `MCP_PROXY_NO_HINTS=1`) + riduzione Edit/Write (v6) + blocco comandi distruttivi (v7) |
-| `log_viewer.py` | viewer HTTP porta 8765 (filtro per firma); `/ext.js` serve `dist/ext.js` |
-| `core-behavior.md` | regole di comportamento iniettate dal proxy |
+| `src/mcp/mcp_proxy.py` | **v7** in uso: proxy MCP + log + avvio viewer + rotazione + iniezione regole da `core-behavior.md` (`MCP_PROXY_RULES`, disattivabile con `MCP_PROXY_NO_HINTS=1`) + riduzione Edit/Write (v6) + blocco comandi distruttivi (v7) |
+| `src/mcp/log_viewer.py` | viewer HTTP porta 8765 (filtro per firma); `/ext.js` serve `dist/ext.js` |
+| `src/mcp/core-behavior.md` | regole di comportamento iniettate dal proxy |
 | `RECAP_sessione.md` | questo file |
 | `logs/proxy_log.jsonl`, `logs/proxy_log_meta.jsonl` | log (in chiaro), ruotati dal proxy; il viewer legge solo `proxy_log.jsonl`; il meta serve solo per la diagnosi a mano. Il proxy crea `logs/` se manca |
 | `src/extension/` | (fino al 15/10 `ext-repo/`, con un suo `.git` ora eliminato) estensione: sorgenti in `src/` (10 moduli), test `test/sig.test.js` (`bun test` da `src/extension`), `README.md` |
@@ -178,6 +178,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 | 15/10 05:20 | nuovo repo per tutto il progetto: `git init` in `C:/Download/test` (email `noreply` locale), `.gitignore` per i dati personali e il codice di terzi, `dist/` nella radice (`build.mjs` aggiornato, bundle identico), `publish.sh` nella radice per `typingcode`, `log_viewer.py:12` → `dist/ext.js` (backup `backups/log_viewer.py.bak3`, viewer pid 42800), `src/extension/.git` eliminato (cronologia dell'estensione persa, approvato). Commit iniziale locale `022de82` (25 file). Nessun segreto trovato nei file pubblicati | l'utente: elimina `src/extension/publish.sh` (rm rifiutato), esegue `bash publish.sh`, mette il nuovo URL, poi elimina il vecchio repo |
 | 15/10 05:25 | l'utente ha spostato `build.mjs` e `publish.sh` in `script/` (e ha eliminato il vecchio `src/extension/publish.sh`): `build.mjs` usa la radice (`script/..`), `publish.sh` fa `cd` nella radice, chiama `bun script/build.mjs` e aggiunge `script/`. Controlli: 4 test, build da due cartelle, codice del bundle identico (cambia solo `//# debugId`), sintassi e `git add --dry-run` OK, viewer OK | l'utente: `bash script/publish.sh`, nuovo URL in TypingMind, poi elimina il vecchio repo |
 | 15/10 05:31 | `tm-inspect/` spostata in `test/tm-inspect/` (Chrome di debug già chiuso, nessun blocco). Aggiornati: `cdp.mjs:21` (screenshot predefinito), `.gitignore` (+ `live.jpg`), `script/publish.sh`, recap §3/§8 (comando di avvio del Chrome con il nuovo `--user-data-dir`). Da cambiare a mano nella config MCP di TypingMind: `--output-dir C:/Download/test/test/tm-inspect/playwright-out` | riorganizzazione in corso; pubblicazione per ultima |
+| 15/10 05:38 | `mcp_proxy.py`, `log_viewer.py`, `core-behavior.md` spostati in `src/mcp/` (`git mv`). In `mcp_proxy.py`: `RULES_FILE` → `src/mcp/core-behavior.md`, `ensure_viewer` → `src\mcp\log_viewer.py` (backup `backups/mcp_proxy.py.bak3`, CRLF conservati). `script/publish.sh`: i tre file sono coperti da `src`. Controllo PASS (8/8): regole dal nuovo percorso, viewer riavviato dal proxy (pid 668), 457 voci, `/ext.js`. **L'utente deve cambiare la config MCP di TypingMind** (`C:/Download/test/src/mcp/mcp_proxy.py`) e riavviare il connettore: con il vecchio percorso il server `claude_code` non parte | config MCP da cambiare; cartella temporanea `~/.claude/tmp/mcp-move` da rimuovere (rm rifiutato) |
 | 14/10 23:14 | proxy v7: guard comandi distruttivi (rm -rf, git push --force, git reset --hard) con errore leggibile + sblocco `# proxy:allow`; stdout serializzato con lock (ora scrivono due thread); test e2e server finto PASS 22/22 | **attivo solo dopo riavvio del connettore** |
 
 ## 8. Promemoria tecnici

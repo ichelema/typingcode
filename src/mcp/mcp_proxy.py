@@ -30,7 +30,7 @@ pending, lock = {}, threading.Lock()
 # v5: regole per risparmiare token, iniettate nelle risposte del server (disattivabili con MCP_PROXY_NO_HINTS=1).
 # Vanno in tools/list (descrizione dei tool: il client le legge sempre) e in initialize.instructions.
 HINTS_ON = os.environ.get("MCP_PROXY_NO_HINTS") != "1"
-RULES_FILE = os.environ.get("MCP_PROXY_RULES", "C:/Download/test/core-behavior.md")
+RULES_FILE = os.environ.get("MCP_PROXY_RULES", "C:/Download/test/src/mcp/core-behavior.md")
 try:
     with open(RULES_FILE, encoding="utf-8") as _f:
         FULL_RULES = _f.read().strip()
@@ -260,7 +260,7 @@ def ensure_viewer():
         if not os.path.exists(py):
             py = r"D:\msys64\ucrt64\bin\pythonw.exe"
         flags = 0x00000008 | 0x00000200 | 0x08000000   # DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW
-        subprocess.Popen([py, r"C:\Download\test\log_viewer.py"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+        subprocess.Popen([py, r"C:\Download\test\src\mcp\log_viewer.py"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                          stderr=subprocess.DEVNULL, creationflags=flags, close_fds=True)
     except Exception:
         pass
