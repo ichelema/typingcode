@@ -5,6 +5,5 @@ test/tm-inspect/live.jpg
 logs/
 backups/
 *.tmp
-# references/: solo il README; typingmind/ ha licenza proprietaria (ridistribuzione vietata), le altre copie sono solo da studiare
-references/*
-!references/README.md
+# typingmind/ ha licenza proprietaria (ridistribuzione vietata), le altre copie sono solo da studiare
+references/

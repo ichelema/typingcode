@@ -24,7 +24,7 @@ git config user.name  "$LOGIN"                      # solo per questo repo, non 
 git config user.email "$EMAIL"
 # Solo i file del progetto: .gitignore esclude profilo Chrome, log, backup e le copie di terzi in references/
 git add --all -- .gitignore CLAUDE_OPUS.md RECAP_sessione.md \
-  script src dist test/tm-inspect/cdp.mjs test/tm-inspect/shot.mjs references/README.md
+  script src dist test/tm-inspect/cdp.mjs test/tm-inspect/shot.mjs
 git status --short
 git commit -q -m "$MSG" || echo "(nessuna modifica da committare)"
 
