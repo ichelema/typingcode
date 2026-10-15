@@ -1,6 +1,6 @@
 ---
 name: stato-e-roadmap
-description: stato al 2026-10-15 (estensione 0.4.1, proxy v7 in src/mcp, repo typingcode, Chrome di debug, Claude Code 2.1.300) e prossimi passi ICH-180, ICH-179
+description: stato al 2026-10-15 (estensione 0.4.1, proxy v7 in src/mcp, repo typingcode, Chrome di debug, Claude Code 2.1.300) e prossimi passi ICH-180, ICH-179, ICH-181
 metadata:
   type: project
 ---
@@ -16,7 +16,7 @@ metadata:
 | Chrome di debug | porta 9222, profilo `test/tm-inspect/chrome-profile` (18 chat, estensione dal nuovo URL); si apre con `bash script/chrome-debug.sh` |
 | TypingMind | riassunto automatico del contesto attivato dall'utente nel browser normale |
 | Claude Code | 2.1.300 (il test degli hook in [scoperte](reference_scoperte.md) era sulla 2.1.299) |
-| Linear (team `ICH`, progetto **Typingcode**, fino al 15/10 "Typingmind") | aperte ICH-179 e ICH-180; ICH-175 … ICH-178 (0.5.0) Canceled |
+| Linear (team `ICH`, progetto **Typingcode**, fino al 15/10 "Typingmind") | aperte ICH-179, ICH-180 e ICH-181; ICH-175 … ICH-178 (0.5.0) Canceled |
 
 Pid e orari dei processi cambiano a ogni avvio: trovali con i comandi in [comandi](reference_comandi.md).
 
@@ -30,5 +30,8 @@ Pid e orari dei processi cambiano a ogni avvio: trovali con i comandi in [comand
    distruttivi restano.
 3. **ICH-179**: ricontrollare gli hook `PreToolUse`/`PostToolUse` con `claude mcp serve` sulla
    versione attuale di Claude Code (ultimo test sulla 2.1.299).
-4. Idee opzionali: "errore" nel viewer solo per i fallimenti veri (oggi un Bash con stderr non vuoto
+4. **ICH-181**: percorsi relativi alla radice del progetto e supporto Linux per proxy, viewer,
+   `chrome-debug.sh` e `cdp.mjs` (oggi funzionano solo in `C:\Download\test` su Windows; su Linux il
+   viewer non parte, senza avvisi). Risolve anche il limite del worktree per ICH-180.
+5. Idee opzionali: "errore" nel viewer solo per i fallimenti veri (oggi un Bash con stderr non vuoto
    conta come errore); stato aperto/chiuso delle chiamate conservato al cambio chat.
