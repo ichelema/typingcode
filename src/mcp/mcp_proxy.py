@@ -40,9 +40,7 @@ except Exception:
 RULES = ("REGOLE (complete in " + RULES_FILE + ", leggile a inizio sessione con Read): "
          "script non banali in JavaScript .mjs eseguiti con bun, in una sottocartella di $HOME/.claude/tmp, con log ed esito PASS/FAIL; "
          "Edit per modifiche puntuali (il proxy toglie la copia del file dalla risposta); script bun solo per modifiche estese o ripetute; "
-         "Read con offset/limit, ricerche con Grep/Glob; output shell sempre accorciato; niente immagini in chat; "
-         "a ogni passo significativo aggiorna C:/Download/test/memory/project_stato-e-roadmap.md e aggiungi una riga a memory/project_diario.md; "
-         "per riprendere leggi C:/Download/test/CLAUDE.md e memory/project_stato-e-roadmap.md.")
+         "Read con offset/limit, ricerche con Grep/Glob; output shell sempre accorciato; niente immagini in chat.")
 TOOL_HINTS = {
     "Bash": RULES,
     "Read": "Leggi solo il necessario: usa offset/limit; per cercare testo usa Grep.",

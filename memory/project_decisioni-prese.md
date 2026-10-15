@@ -22,6 +22,9 @@ metadata:
   ridistribuzione, `typingmind-extensions/` e `simple-cors-proxy/` non hanno licenza. Nel repo
   stanno solo URL e commit.
 - **ICH-179 resta aperta** come ricontrollo degli hook su una versione nuova di Claude Code.
+- **Sviluppo solo da Claude Code in `C:/Download/test`; TypingMind è produzione** (15/10): le regole
+  iniettate dal proxy (`src/mcp/core-behavior.md` e la sintesi in `mcp_proxy.py`) non parlano delle
+  memorie di questo progetto. `CLAUDE.md` e `memory/` servono solo alle sessioni di sviluppo qui.
 - **Struttura delle cartelle** decisa dall'utente il 15/10: `src/mcp/`, `src/extension/`, `dist/`,
   `script/`, `test/tm-inspect/`, `logs/`, `memory/`.
 - **Lingua**: documenti, memorie, issue e commenti Linear in italiano (il progetto Linear non ha
