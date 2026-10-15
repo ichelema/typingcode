@@ -101,7 +101,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 
 ## 6. Stato attuale (aggiornato 15/10/2026 01:17)
 
-- **Per riprendere**: leggi questa §6, la §7 e le ultime righe del diario §7c. `HANDOFF_LLM.md` è stato eliminato il 15/10 (descriveva lo stato del 14/10). Issue aperte in Linear, progetto Typingmind: ICH-179 (hook), ICH-180 (pannello dalla chat).
+- **Per riprendere**: leggi questa §6, la §7 e le ultime righe del diario §7c. `HANDOFF_LLM.md` è stato eliminato il 15/10 (descriveva lo stato del 14/10). Issue aperte in Linear, progetto **typingcode** (fino al 15/10 "Typingmind"): ICH-179 (hook), ICH-180 (pannello dalla chat).
 - **Proxy**: `mcp_proxy.py` v6 attivo (pid 26692, started 2026-10-14 23:17:23): log, regole da `core-behavior.md`, slim di Edit/Write.
 - **Viewer**: `log_viewer.py` (pid 34904): fold chiuso di default, max-height 100px, diff `+N -M`, filtri tool/stato, `/ext.js` = `dist/ext.js`.
 - **Estensione**: 0.4.1, sorgenti `src/extension/src/` → `dist/ext.js` (radice), pubblicata nel repo pubblico `ichelema/typingcode` (il vecchio `tm-tool-viewer-ext-tmp` è eliminato). URL in uso in TypingMind dal 15/10:
