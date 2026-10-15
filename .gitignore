@@ -1,0 +1,9 @@
+# Repo pubblico: niente dati personali, segreti o codice di terzi
+tm-inspect/chrome-profile/
+tm-inspect/playwright-out/
+logs/
+backups/
+*.tmp
+# references/: solo il README; typingmind/ ha licenza proprietaria (ridistribuzione vietata), le altre copie sono solo da studiare
+references/*
+!references/README.md
