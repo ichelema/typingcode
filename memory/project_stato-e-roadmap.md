@@ -1,6 +1,6 @@
 ---
 name: stato-e-roadmap
-description: stato al 2026-10-15 (estensione 0.6.x di ICH-180 installata dall'utente, 0.6.1 da mettere al posto della 0.6.0, proxy v7, connettore MCP di debug, profilo di debug in D:, C:\Download\test da eliminare) e prossimi passi: URL 0.6.0, decisione su log e viewer, ICH-179, ICH-181
+description: stato al 2026-10-15 (estensione 0.6.1 di ICH-180 installata nei due browser, proxy v7, connettore MCP di debug, profilo di debug in D:, C:\Download\test da eliminare) e prossimi passi: URL 0.6.0, decisione su log e viewer, ICH-179, ICH-181
 metadata:
   type: project
 ---
@@ -9,7 +9,7 @@ metadata:
 
 | Elemento | Stato |
 |---|---|
-| Estensione TypingMind | **0.6.0** (ICH-180, `077f3c7`) installata dall'utente il 15/10 nel browser normale e nel Chrome di debug; **0.6.1** (`811cc0c`, corregge il pannello vuoto dopo F5) da mettere al posto della 0.6.0 in tutti e due. URL in [estensione](reference_estensione.md); misure nel commento di ICH-180 |
+| Estensione TypingMind | **0.6.1** (ICH-180, `811cc0c`) installata dall'utente il 15/10 nel browser normale e nel Chrome di debug (nel debug controllato: script `811cc0c`, pannello pieno dopo F5 con 163 card). URL in [estensione](reference_estensione.md); misure nel commento di ICH-180 |
 | Proxy | `src/mcp/mcp_proxy.py` **v7**: log in `logs/`, regole da `src/mcp/core-behavior.md`, riduzione di Edit/Write, blocco dei comandi distruttivi. Lo avvia il connettore MCP di TypingMind |
 | Viewer | `src/mcp/log_viewer.py` su `http://127.0.0.1:8765`, filtro per firma, `/ext.js` = `dist/ext.js` |
 | Repo | `ichelema/typingcode`, pubblico, con tutto il progetto; `references/` come submodule |

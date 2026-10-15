@@ -13,9 +13,9 @@ metadata:
   quando il commit tocca `src/extension/` e blocca il commit se `dist/` non è aggiornato; l'hook
   `pre-push` stampa l'URL githack del commit quando il push cambia `dist/ext.js`, più il comando per
   controllarlo (`script/hooks/`, attivi con `core.hooksPath`).
-- **URL da usare (v0.6.1, commit `811cc0c`, verificato il 15/10: HTTP 200, `application/javascript`,
-  CORS `*`, identico a `dist/ext.js`)**. Il 15/10 l'utente ha installato la 0.6.0 (`077f3c7`) nel browser
-  normale e nel Chrome di debug; la 0.6.1 va messa al posto della 0.6.0 in tutti e due:
+- **URL in uso (v0.6.1, commit `811cc0c`, verificato il 15/10: HTTP 200, `application/javascript`,
+  CORS `*`, identico a `dist/ext.js`)**, installato dall'utente il 15/10 nel browser normale e nel
+  Chrome di debug:
   ```
   https://rawcdn.githack.com/ichelema/typingcode/811cc0c9eb2d279a753ec4e1d3202f3b70399b6f/dist/ext.js
   ```
