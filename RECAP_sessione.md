@@ -110,7 +110,7 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 - **Viewer**: `src/mcp/log_viewer.py` (alle 06:06: pid 36288), filtro per firma, `/ext.js` = `dist/ext.js`.
 - **Estensione**: 0.4.1, URL in §4.
 - **Repo**: `ichelema/typingcode`, pubblico, con tutto il progetto (§3); `references/` come submodule.
-- **Chrome di debug** (9222): chiuso. Profilo in `test/tm-inspect/chrome-profile`, comando di riapertura in §8. Il server MCP `playwright` di TypingMind si aggancia a questo Chrome (`--output-dir C:/Download/test/test/tm-inspect/playwright-out`).
+- **Chrome di debug** (9222): aperto alle 06:10 con `script/chrome-debug.sh`; profilo spostato in `test/tm-inspect/chrome-profile` intatto (18 chat, estensione dal nuovo URL `typingcode`). Riapertura in §8. Il server MCP `playwright` di TypingMind si aggancia a questo Chrome (`--output-dir C:/Download/test/test/tm-inspect/playwright-out`).
 - **TypingMind**: riassunto automatico del contesto attivato dall'utente nel browser normale.
 - **Claude Code**: versione 2.1.300 (il test degli hook in §5 era sulla 2.1.299).
 
@@ -184,7 +184,8 @@ Rollback: prima di cambiare proxy o viewer, creare un backup in `backups/`; per 
 - Controllare quale proxy è attivo: ultima riga di `logs/proxy_log.jsonl`, campi `pid` e `started`.
 - Errori del connettore: `E:\AI\Claude\mcp_claude_err.log`.
 - I log contengono tutto in chiaro (anche eventuali segreti letti dai file).
-- **Playwright MCP** (server `playwright` del connettore TypingMind) è agganciato al Chrome di debug via `--cdp-endpoint http://127.0.0.1:9222`. Se il Chrome di debug è chiuso, riaprirlo con:
+- **Playwright MCP** (server `playwright` del connettore TypingMind) è agganciato al Chrome di debug via `--cdp-endpoint http://127.0.0.1:9222`. Se il Chrome di debug è chiuso, riaprirlo con `bash C:/Download/test/script/chrome-debug.sh` (non apre una seconda istanza se la porta 9222 è già attiva; chiude con PASS/FAIL). Comando equivalente:
   `"/c/Program Files/Google/Chrome/Application/chrome.exe" --remote-debugging-port=9222 --remote-debugging-address=127.0.0.1 --user-data-dir="C:/Download/test/test/tm-inspect/chrome-profile" https://www.typingmind.com/`
+  `cdp.mjs` si collega alla prima scheda: se Chrome mostra una sua pagina (es. `chrome://search-engine-choice/`), chiuderla prima.
 - **Risparmio token** (causa del limite 1M): ogni turno rimanda tutto il contesto, quindi ogni output grande si ripaga a ogni passo. Evitare: Edit/Write su file grandi (il tool restituisce l'intero file: `ext.js` ~14 KB, questo recap ~30 KB) → per file grandi usare modifiche via script con output minimo; Read di file interi (usare offset/limit o Grep); output Bash lunghi (sempre `head`/`cut`, mai righe di comando complete dei processi); screenshot (solo JPEG ridotti o `--image-responses omit`). Aprire una chat nuova per ogni blocco di lavoro e riprendere da questo file.
 - **Screenshot per l'assistente: solo leggeri** (richiesta utente, consumano token). Usare `test/tm-inspect/shot.mjs` (JPEG, scala 0,5, qualità 50) o `node test/tm-inspect/cdp.mjs shot <file.jpg> [selettore]` per ritagliare un elemento (es. `#tv-side-panel`). Preferire verifiche via `eval` (JSON) e guardare immagini solo se serve davvero.
