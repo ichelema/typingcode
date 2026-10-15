@@ -30,7 +30,9 @@ metadata:
   - 0.5.0 (annullata il 15/10): un processo MCP per chat; chiamate delle chat in background al
     processo sbagliato (ICH-178)
   - **0.6.0 (15/10, ICH-180, provata nel Chrome di debug)**: niente iframe, viewer e log; chiamate di
-    tutti i server MCP lette dalla chat in IndexedDB. Fino al cambio dell'URL resta in uso la 0.4.1
+    tutti i server MCP lette dalla chat in IndexedDB. Fino al cambio dell'URL resta in uso la 0.4.1.
+    URL (commit `077f3c7`, verificato: 200, `application/javascript`, CORS `*`, identico a `dist/ext.js`):
+    `https://rawcdn.githack.com/ichelema/typingcode/077f3c7c1a58712ffdcbf78d8a73cc1948830914/dist/ext.js`
 - Diagnostica in console: `window.__toolviewer_stats` → `reads`, `lastMs`, `maxMs`, `lastAt` (dalla
   0.6.0: lettura + estrazione, tempo totale compresa l'attesa se la pagina è occupata).
 - Emergenza: `https://www.typingmind.com/?safe_mode=1` carica TypingMind senza estensioni.

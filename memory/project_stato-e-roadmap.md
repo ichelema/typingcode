@@ -9,7 +9,7 @@ metadata:
 
 | Elemento | Stato |
 |---|---|
-| Estensione TypingMind | **0.4.1** in uso, URL in [estensione](reference_estensione.md). **0.6.0** (ICH-180) provata nel Chrome di debug e committata: l'URL githack lo stampa l'hook `pre-push` |
+| Estensione TypingMind | **0.4.1** in uso, URL in [estensione](reference_estensione.md). **0.6.0** (ICH-180) provata nel Chrome di debug e pubblicata (commit `077f3c7`, URL in [estensione](reference_estensione.md)); misure nel commento di ICH-180 |
 | Proxy | `src/mcp/mcp_proxy.py` **v7**: log in `logs/`, regole da `src/mcp/core-behavior.md`, riduzione di Edit/Write, blocco dei comandi distruttivi. Lo avvia il connettore MCP di TypingMind |
 | Viewer | `src/mcp/log_viewer.py` su `http://127.0.0.1:8765`, filtro per firma, `/ext.js` = `dist/ext.js` |
 | Repo | `ichelema/typingcode`, pubblico, con tutto il progetto; `references/` come submodule |
