@@ -39,5 +39,9 @@ metadata:
   vecchia cartella resta come copia, ma non va più usata: il ramo `main` va avanti solo qui.
 - **Struttura delle cartelle** decisa dall'utente il 15/10: `src/mcp/`, `src/extension/`, `dist/`,
   `script/`, `test/tm-inspect/`, `logs/`, `memory/`.
+- **Cartella di lavoro per chat** (13/11, richiesta dell'utente): pulsante nella barra del
+  prompt (non nella sidebar); un processo `claude mcp serve` per chat tramite plugin MCP custom
+  con `{chatID}` e instradamento serializzato nell'estensione; fail-closed invece di fallback.
+  Supera il limite della 0.5.0 (id chat ora dalla chat che genera, non da `location.hash`).
 - **Lingua**: documenti, memorie, issue e commenti Linear in italiano (il progetto Linear non ha
   `lang:en`); messaggi di commit in inglese.

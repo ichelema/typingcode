@@ -40,10 +40,12 @@ metadata:
   nel test 2.1.323 il `cd` Bash non persiste alla chiamata successiva. Nessuna implementazione;
   prima chiarire se la cartella deve essere globale o per chat (server attuale condiviso).
   Evidenze e fonti in [scoperte](reference_scoperte.md).
-- Cartella per chat (richiesta 13/11, pulsante nella barra del prompt): fattibile solo con
-  plugin MCP custom non generato + wrapper fetch con serializzazione start→call e un processo
-  per chat (dettagli in [scoperte](reference_scoperte.md)). In attesa di conferma dell'utente.
-- Prossimo: conferma architettura cartella per chat; decisione su log/viewer, che restano invariati; ICH-181.
+- Cartella per chat: **0.7.0 + proxy v8 implementati e pubblicati** (dettagli in
+  [estensione](reference_estensione.md) e [architettura](reference_architettura.md)). L'utente
+  deve: installare l'URL 0.7.0, creare il plugin da `src/mcp/claude_code.plugin.json` (JSON
+  editor, scheda MCP Connector con URL/token di :50880), togliere `claude_code` dal JSON MCP,
+  provare due chat. Limiti: processi per chat non chiusi, aspetto del pulsante non verificato a vista.
+- Prossimo: prova utente della cartella per chat; decisione su log/viewer, che restano invariati; ICH-181.
 
 # Stato storico (2026-10-15)
 

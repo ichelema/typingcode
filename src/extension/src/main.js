@@ -1,6 +1,8 @@
 // Estensione TypingMind: pulsante nella barra della chat che apre un pannello laterale con le chiamate ai tool
 // della chat aperta (input, output, durata), lette dalla chat in IndexedDB.
 // Sorgenti in src/, bundle minificato in dist/ext.js (bun script/build.mjs).
+// v0.7.0: cartella di lavoro per chat: pulsante nella barra del prompt e instradamento delle chiamate MCP a un processo per
+//         chat (route.js; serve il plugin MCP custom con env TM_CHAT_ID="{chatID}" e mcp_proxy.py v8).
 // v0.6.2: Svuota lista nasconde le card della chat solo nel pannello fino a F5.
 // v0.6.1: con il pannello aperto prima di un F5 il pannello restava vuoto (nasceva dopo la prima lettura): ora si riempie.
 // v0.6.0: niente viewer :8765 e niente log del proxy: il pannello disegna le chiamate dalla chat (tutti i server MCP) e
@@ -10,7 +12,7 @@
 //         ridimensionabile, si chiude se si apre il pannello nativo di TypingMind (e viceversa).
 // v0.3.0: la chat non viene piu' riletta ogni 3 secondi (con chat lunghe bloccava la pagina): si legge al cambio di chat,
 //         quando la scheda torna visibile, al caricamento del viewer e quando il viewer segnala chiamate non ancora nella chat.
-import { NS, VERSION, BTN_ID, PANEL_ID, STYLE_ID, K_OPEN } from './config.js';
+import { NS, VERSION, BTN_ID, PANEL_ID, STYLE_ID, K_OPEN, DIR_BTN_ID } from './config.js';
 import { S } from './state.js';
 import { chatIdFromHash } from './calls.js';
 import { watchSaves } from './db.js';
@@ -19,6 +21,8 @@ import { CSS } from './style.js';
 import { nativeBtn, applyTheme } from './view.js';
 import { sync, schedule, cancelSchedule } from './sync.js';
 import { ensureButton, ensurePanel, setOpen } from './ui.js';
+import { createRouter, getDirs } from './route.js';
+import { ensureDirButton } from './workdir.js';
 
 function init() {
   // Statistiche di lettura, consultabili dalla console: window.__toolviewer_stats
@@ -27,11 +31,15 @@ function init() {
   // TypingMind cambia chat con history.replaceState, che NON genera hashchange: si intercettano pushState/replaceState
   // (come fa scroll.js di augustx28/typingmind-extensions). Si rilegge la chat solo se l'id e' cambiato davvero.
   let curChat = chatIdFromHash(location.hash), active = true;
+  // Prima di tutto: TypingMind risolve fetch a ogni chiamata al connettore, quindi il wrapper vale anche per le chat
+  // in background. Dopo il cleanup resta in catena ma trasparente.
+  window.fetch = createRouter(window.fetch.bind(window), getDirs, 30000, () => active);
   const onNav = () => {
     if (!active) return;
     const id = chatIdFromHash(location.hash);
     if (id === curChat) return;
     curChat = id;
+    ensureDirButton();
     sync(false);
   };
   for (const fn of ['pushState', 'replaceState']) {                   // wrapper a catena: resta innocuo anche dopo il cleanup
@@ -50,7 +58,7 @@ function init() {
   let raf = 0;
   const mo = new MutationObserver(() => {                             // React ridisegna la barra o la colonna: rimette pulsante e pannello
     if (raf) return;
-    raf = requestAnimationFrame(() => { raf = 0; ensureButton(); if (S.isOpen) ensurePanel(); });
+    raf = requestAnimationFrame(() => { raf = 0; ensureButton(); ensureDirButton(); if (S.isOpen) ensurePanel(); });
   });
   // Cambio tema di TypingMind (classe/stile su <html>) con il pannello aperto: applyTheme() lavora solo se il colore cambia davvero.
   // Il <body> ha una transizione di 0,15 s sul colore di sfondo: si rilegge subito e di nuovo a transizione finita.
@@ -72,6 +80,7 @@ function init() {
     mo.observe(document.body, { childList: true, subtree: true });
     themeMo.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style', 'data-theme'] });
     ensureButton();
+    ensureDirButton();
     if (lsGet(K_OPEN, '0') === '1') setOpen(true);
     log('caricata v' + VERSION);
   }
@@ -83,7 +92,7 @@ function init() {
     window.removeEventListener('popstate', onNav);
     document.removeEventListener('visibilitychange', onVisible);
     document.removeEventListener('click', onDocClick, true);
-    for (const id of [BTN_ID, PANEL_ID, STYLE_ID]) { const el = document.getElementById(id); if (el) el.remove(); }
+    for (const id of [BTN_ID, PANEL_ID, STYLE_ID, DIR_BTN_ID]) { const el = document.getElementById(id); if (el) el.remove(); }
     window[`__${NS}_loaded`] = false;
   };
 

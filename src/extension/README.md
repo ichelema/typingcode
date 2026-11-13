@@ -16,6 +16,15 @@ in IndexedDB. Le nuove chiamate continuano a comparire; quelle nascoste, anche s
 restano nascoste con Ricarica, chiudi/riapri e cambio chat. Lo stato è separato per chat e dura
 fino a F5, che ripristina la lista completa.
 
+**Cartella di lavoro per chat** (0.7.0): il pulsante 📁 nella barra dei pulsanti del prompt
+associa una cartella alla chat aperta (salvata in `localStorage`, chiave `toolviewer_workdirs`).
+Serve il plugin MCP custom `src/mcp/claude_code.plugin.json` (env `TM_CHAT_ID: "{chatID}"`, che
+TypingMind sostituisce con la chat che genera) e `mcp_proxy.py` v8. `route.js` intercetta `fetch`
+verso il connettore: serializza la coppia `/start` → `/clients/<id>/call_tools|tools` per id
+statico e la manda a un processo per chat (`<id>__<chat>`) con `MCP_PROXY_CWD`. Senza `/start`
+appaiato, o senza id chat, la chiamata viene rifiutata; il proxy blocca le chiamate non instradate
+o con cartella non valida. Non è un sandbox: percorsi assoluti fuori cartella restano possibili.
+
 ## Struttura
 
 | Percorso | Ruolo |
@@ -30,7 +39,10 @@ fino a F5, che ripristina la lista completa.
 | `src/view.js` | tema, intestazione, card delle chiamate |
 | `src/sync.js` | lettura della chat e disegno, solo su segnale |
 | `src/ui.js` | pulsante e pannello |
+| `src/route.js` | instradamento per chat delle chiamate al connettore MCP, cartelle per chat |
+| `src/workdir.js` | pulsante cartella nella barra del prompt |
 | `test/calls.test.js` | test di `callsFromChat` su `test/chat-sample.json` (struttura reale, contenuti anonimi) |
+| `test/route.test.js` | test dell'instradamento con connettore finto (chat concorrenti, blocchi, timeout) |
 | `../../dist/ext.js` | bundle minificato nella radice del progetto (generato da `script/build.mjs`, committato: è il file servito dalla CDN) |
 
 ## Comandi

@@ -24,6 +24,21 @@ Chrome di debug (porta 9222) → connettore di debug @typingmind/mcp su 127.0.0.
    script/chrome-debug.sh, token in test/tm-inspect/mcp-token, fuori da git) → stessi server MCP
 ```
 
+## Cartella per chat (0.7.0, proxy v8)
+
+```
+TypingMind (plugin MCP custom, env TM_CHAT_ID="{chatID}")
+  └─ estensione route.js: /start + call_tools serializzati per id statico → id "<statico>__<chat>",
+     env TM_ROUTED=1 e MCP_PROXY_CWD (cartella scelta col pulsante 📁)
+       └─ connettore: un processo per chat → env.exe → zsh → mcp_proxy.py (Popen cwd=cartella) → claude mcp serve
+```
+
+Proxy v8: con `TM_CHAT_ID` senza `TM_ROUTED=1`, o con cartella non assoluta/inesistente, ogni
+`tools/call` riceve un errore (fail-closed); `/d/x` diventa `d:/x`; log `proxy_log_<chat>.jsonl`.
+Senza `TM_CHAT_ID` (vecchio JSON MCP) il comportamento è invariato. Il connettore unisce `env`
+alla sua env predefinita (`getDefaultEnvironment()` + env). Cambio cartella = config diversa =
+il connettore riavvia il processo di quella chat. Processi per chat mai chiusi automaticamente.
+
 ## Configurazione MCP del server `claude_code`
 
 Ultimo argomento (percorso cambiato il 15/10: `mcp_proxy.py` è in `src/mcp/`):

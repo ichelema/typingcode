@@ -11,6 +11,12 @@ Novita' v4: rotazione. MCP_PROXY_KEEP (default 500 righe), MCP_PROXY_KEEP_META (
 import sys, os, re, json, subprocess, threading, time, shutil
 
 LOG = os.environ.get("MCP_PROXY_LOG", r"D:\Sviluppo\Progetti\typingcode\logs\proxy_log.jsonl")
+# v8: un processo per chat (cartella di lavoro per chat). L'estensione TypingMind (toolviewer >= 0.7.0) instrada le
+# chiamate e mette nell'ambiente TM_ROUTED=1 e MCP_PROXY_CWD; TM_CHAT_ID arriva dalla config del plugin ("{chatID}").
+# Log separato per chat: piu' proxy che scrivono sullo stesso file corrompono righe.
+CHAT_ID = re.sub(r"[^\w-]", "_", os.environ.get("TM_CHAT_ID", ""))
+if CHAT_ID:
+    LOG = os.path.splitext(LOG)[0] + "_" + CHAT_ID + ".jsonl"
 META = os.path.splitext(LOG)[0] + "_meta.jsonl"
 os.makedirs(os.path.dirname(LOG), exist_ok=True)   # senza cartella write() ignora l'errore e il log si perde
 PID = os.getpid()
@@ -22,8 +28,16 @@ if len(sys.argv) < 2:
     sys.exit("Uso: mcp_proxy.py <comando> [argomenti...]   (es. mcp_proxy.py claude mcp serve)")
 cmd = sys.argv[1:]
 cmd[0] = shutil.which(cmd[0]) or cmd[0]
+# Fail-closed: con TM_CHAT_ID ma senza instradamento (estensione assente) o con una cartella non valida, il server
+# parte (il connettore deve vederlo vivo) ma ogni tools/call riceve un errore invece di girare nella cartella sbagliata.
+WORKDIR = re.sub(r"^/([a-zA-Z])/", r"\1:/", os.environ.get("MCP_PROXY_CWD", "").strip())   # /d/x (MSYS2) -> d:/x
+BLOCK = None
+if "TM_CHAT_ID" in os.environ and os.environ.get("TM_ROUTED") != "1":
+    BLOCK = "chiamata non instradata per chat (estensione TypingMind toolviewer >= 0.7.0 non attiva)"
+elif WORKDIR and not (os.path.isabs(WORKDIR) and os.path.isdir(WORKDIR)):
+    BLOCK = "cartella di lavoro della chat non trovata o non assoluta: " + WORKDIR
 child = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=None,
-                         text=True, encoding="utf-8")
+                         text=True, encoding="utf-8", cwd=(WORKDIR or None) if not BLOCK else None)
 
 pending, lock = {}, threading.Lock()
 
@@ -78,6 +92,9 @@ def guard_check(cmd):
         if rx.search(cmd):
             return label
     return None
+
+def error_reply(rid, text):
+    return {"jsonrpc": "2.0", "id": rid, "result": {"content": [{"type": "text", "text": text}], "isError": True}}
 
 def guard_reply(rid, label, cmd):
     text = ("BLOCCATO dal proxy MCP: comando distruttivo (" + label + "), NON eseguito.\n"
@@ -198,6 +215,13 @@ def client_to_child():
             msg = json.loads(line)
             if msg.get("method") == "tools/call":
                 p = msg.get("params") or {}
+                if BLOCK:
+                    reply = error_reply(msg.get("id"), "BLOCCATO dal proxy MCP, NON eseguito: " + BLOCK)
+                    write(LOG, {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "tool": p.get("name"), "arguments": p.get("arguments"),
+                                "result": reply["result"], "ms": 0, "pid": PID, "started": STARTED,
+                                "rpc_id": msg.get("id"), "blocked": "routing"})
+                    emit(json.dumps(reply, ensure_ascii=False))
+                    continue
                 args = p.get("arguments") if isinstance(p.get("arguments"), dict) else {}
                 label = guard_check(args.get("command")) if p.get("name") == "Bash" else None
                 if label:

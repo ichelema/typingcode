@@ -1,4 +1,4 @@
-import { PANEL_ID, DEF_W } from './config.js';
+import { PANEL_ID, DEF_W, DIR_BTN_ID } from './config.js';
 
 // CSS del pannello (nel documento di TypingMind).
 export const CSS = `
@@ -13,7 +13,8 @@ export const CSS = `
 #${PANEL_ID} .tv-sub{font-size:12px;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #${PANEL_ID} .tv-icon{background:none;border:0;color:inherit;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 #${PANEL_ID} .tv-icon:hover{background:var(--tv-hover)}
-#${PANEL_ID} .tv-list{flex:1;min-height:0;overflow:auto;padding:10px 12px}`;
+#${PANEL_ID} .tv-list{flex:1;min-height:0;overflow:auto;padding:10px 12px}
+#${DIR_BTN_ID}[aria-pressed="true"]{color:#3b82f6}`;
 
 // CSS della lista, dentro lo shadow root di .tv-list: le variabili --tv-* arrivano dal pannello per ereditarieta'.
 export const LIST_CSS = `
@@ -46,4 +47,5 @@ const svg = (inner) => `<svg width="18" height="18" viewBox="0 0 18 18" fill="no
 export const ICON_TOOLS = svg('<rect x="1.75" y="2.75" width="14.5" height="12.5" rx="2"/><polyline points="5 7 7.5 9 5 11"/><line x1="9.5" y1="11.25" x2="13" y2="11.25"/>');
 export const ICON_RELOAD = svg('<path d="M15.25 9a6.25 6.25 0 1 1-1.83-4.42"/><polyline points="15.25 2.75 15.25 5.75 12.25 5.75"/>');
 export const ICON_CLEAR = svg('<path d="M3 5h12M6 5V3h6v2m2 0-.7 10H4.7L4 5m3 3v4m4-4v4"/>');
+export const ICON_FOLDER = svg('<path d="M2 5.25c0-.83.67-1.5 1.5-1.5h3.4l1.6 1.75h6c.83 0 1.5.67 1.5 1.5v6.75c0 .83-.67 1.5-1.5 1.5h-11c-.83 0-1.5-.67-1.5-1.5z"/>');
 export const ICON_CLOSE = svg('<line x1="4.5" y1="4.5" x2="13.5" y2="13.5"/><line x1="13.5" y1="4.5" x2="4.5" y2="13.5"/>');

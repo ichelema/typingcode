@@ -31,6 +31,13 @@ metadata:
   modificare IndexedDB. Nuove chiamate visibili, stato separato per chat fino a F5; Ricarica
   e chiudi/riapri non annullano lo svuotamento. F5 ripristina tutta la lista.
   L'URL 0.6.1 sopra resta quello installato finché l'utente non lo sostituisce.
+- **0.7.0 (13/11, cartella per chat)**: pulsante 📁 nella barra del prompt + `route.js`
+  (wrapper di `fetch` verso il connettore). Richiede il plugin MCP custom
+  `src/mcp/claude_code.plugin.json` al posto di `claude_code` nel JSON MCP. Test: 18 PASS;
+  e2e reale nel Chrome di debug (connettore 50881 + proxy v8 + `claude mcp serve`): due chat in
+  parallelo nelle proprie cartelle, cartella mantenuta nei prompt successivi, chiamata non
+  appaiata bloccata (409), un processo per chat. Non provato: flusso completo da una chat
+  TypingMind con il plugin custom (sostituzione di `{chatID}` verificata solo nel bundle).
 - Versioni:
   - 0.1: riquadro + avviso offline
   - 0.2.0: filtro per chat — **rileggeva la chat ogni 3 s → blocchi di Chrome**
