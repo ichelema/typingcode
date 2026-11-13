@@ -31,7 +31,7 @@ metadata:
   modificare IndexedDB. Nuove chiamate visibili, stato separato per chat fino a F5; Ricarica
   e chiudi/riapri non annullano lo svuotamento. F5 ripristina tutta la lista.
   L'URL 0.6.1 sopra resta quello installato finché l'utente non lo sostituisce.
-- **0.7.1 (13/11)**: processi per chat chiusi dopo 30 min di inattività (proxy v9 termina; l'estensione
+- **0.7.1 (13/11, commit `a89a200`, URL githack verificato identico)**: `https://rawcdn.githack.com/ichelema/typingcode/a89a2007732a20bc4dfe001c9bb5e1f44ed6f854/dist/ext.js`. Processi per chat chiusi dopo 30 min di inattività (proxy v9 termina; l'estensione
   fa `DELETE` della voce morta prima di riusarla, soglia 29 min) e alla cancellazione della chat
   (`IDBObjectStore.delete('CHAT_<id>')`, verificato `deleteChatsByIDs` → idb-keyval `del`). Test 22
   PASS; proxy v9 5 casi PASS; e2e reale nel Chrome di debug PASS (proxy terminati, riuso con nuovo
