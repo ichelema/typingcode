@@ -24,7 +24,9 @@ metadata:
   jsDelivr risponde 503 per i commit nuovi: usare githack. Installazione: Preferences → Advanced
   Settings → Extensions → sostituire l'URL vecchio → ricaricare (F5). Dopo il cambio dell'URL serve F5:
   fino ad allora la pagina esegue la versione vecchia.
-- **0.6.2 da installare dopo la pubblicazione**: pulsante «Svuota lista» nel pannello.
+- **0.6.2 pubblicata (`e7912ac`), da installare**: pulsante «Svuota lista» nel pannello.
+  URL verificato il 13/11 (HTTP 200, JavaScript, CORS `*`, identico a `dist/ext.js`):
+  `https://rawcdn.githack.com/ichelema/typingcode/e7912acad08d2cb52a519274b0759778e63f7f47/dist/ext.js`
   Nasconde solo le chiamate già mostrate della chat aperta (anche quelle in corso), senza
   modificare IndexedDB. Nuove chiamate visibili, stato separato per chat fino a F5; Ricarica
   e chiudi/riapri non annullano lo svuotamento. F5 ripristina tutta la lista.
