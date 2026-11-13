@@ -5,7 +5,21 @@ metadata:
   type: project
 ---
 
-# Stato (2026-10-15)
+# Ripresa verificata (2026-11-13)
+
+- Checkout attuale: `D:/Sviluppo/Progetti/Personali/20261015_typingcode`; i percorsi assoluti
+  storici nelle memorie/script non sono stati migrati (ICH-181).
+- ICH-180 e ICH-182 ancora Backlog su Linear. `bun test`: 9 PASS, 23 asserzioni.
+- Chrome di debug e connettore avviati con `script/chrome-debug.sh` dal checkout attuale.
+  Script installato `811cc0c`, 0.6.1: dopo reload 163 card per 163 risposte tool, blocco Sentry presente.
+- A pagina stabilizzata, Ricarica: una lettura, 32 ms; long task osservati in 3 s: 51 e 97 ms,
+  senza attribuzione causale. All'avvio `lastMs` fino a 1.630 ms (tempo totale inclusa attesa).
+  Non sono misure del browser normale.
+- Il riassunto conserva la cronologia nel sorgente locale; evidenze e limiti in
+  [scoperte](reference_scoperte.md). Nessun nuovo riassunto provocato, nessun prompt inviato.
+- Prossimo: prove manuali ICH-182 nel browser normale; log e viewer non modificati.
+
+# Stato storico (2026-10-15)
 
 | Elemento | Stato |
 |---|---|

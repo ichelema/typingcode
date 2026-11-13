@@ -48,5 +48,11 @@ metadata:
 - **Plugin TypingMind `show_tool_output`** (render_html): funziona ma richiede che l'assistente ricopi
   l'output → superato dal proxy.
 - Il browser accetta l'iframe e lo script da `http://127.0.0.1:8765` dentro TypingMind (https).
-- Da controllare: se il riassunto automatico del contesto toglie messaggi dal record della chat, il
-  pannello 0.6.0 perde le chiamate vecchie (il log del proxy no).
+- **Riassunto e persistenza (13/11, ICH-180/182)**: nel sorgente locale `references/typingmind`
+  (`cd87b2c`), `0e98c2_2rirwz.js:20,22,1494`, il summary viene aggiunto tramite `messagesAdded` →
+  `saveMessages(t => [...t, ...e])`. `_cutOffContextSummaries` usa `filter`/`slice` e restituisce un
+  nuovo array per il modello: non cancella i messaggi dal record. Nel Chrome di debug la chat
+  `ROa5e2T-v_` conserva 331 messaggi, 163 risposte tool e 163 card; 10 messaggi contengono il
+  marcatore `tm_context_summary`. Riassunto automatico abilitato nel profilo. Limite: il sorgente
+  locale non prova il comportamento della build online; resta la prova prima/dopo un nuovo
+  riassunto nel browser normale (ICH-182).
