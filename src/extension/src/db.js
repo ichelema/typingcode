@@ -23,6 +23,21 @@ export function watchSaves(cb) {
   };
 }
 
+// Segnale "chat eliminata": TypingMind (deleteChatsByIDs) usa idb-keyval del() -> delete('CHAT_<id>'). Come watchSaves:
+// chiama sempre l'originale e guarda solo la chiave.
+export function watchDeletes(cb) {
+  const orig = IDBObjectStore.prototype.delete;
+  IDBObjectStore.prototype.delete = function (...args) {
+    const r = orig.apply(this, args), key = args[0];
+    try {
+      if (typeof key === 'string' && key.startsWith(CHAT_PREFIX) && this.name === STORE && this.transaction.db.name === DB_NAME) {
+        cb(key.slice(CHAT_PREFIX.length));
+      }
+    } catch (e) {}
+    return r;
+  };
+}
+
 export async function readChat(id) {
   const db = await openDb();
   if (!db.objectStoreNames.contains(STORE)) return null;

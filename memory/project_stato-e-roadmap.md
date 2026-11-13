@@ -44,7 +44,8 @@ metadata:
   [estensione](reference_estensione.md) e [architettura](reference_architettura.md)). L'utente
   deve: installare l'URL 0.7.0, creare il plugin da `src/mcp/claude_code.plugin.json` (JSON
   editor, scheda MCP Connector con URL/token di :50880), togliere `claude_code` dal JSON MCP,
-  provare due chat. Limiti: processi per chat non chiusi, aspetto del pulsante non verificato a vista.
+  provare due chat. 0.7.1: chiusura dopo 30 min di inattività e alla cancellazione della chat.
+  Limite: aspetto del pulsante non verificato a vista.
 - Prossimo: prova utente della cartella per chat; decisione su log/viewer, che restano invariati; ICH-181.
 
 # Stato storico (2026-10-15)

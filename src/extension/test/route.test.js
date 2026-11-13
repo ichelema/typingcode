@@ -12,7 +12,7 @@ function fake({ okStart = true } = {}) {
   const log = [];
   const f = async (url, init = {}) => {
     const u = new URL(url), body = init.body && init.body.startsWith('{') ? JSON.parse(init.body) : null;
-    log.push({ path: u.pathname, body });
+    log.push({ path: u.pathname, body, method: (init.method || 'GET').toUpperCase(), auth: new Headers(init.headers || {}).get('Authorization') });
     const ok = !(u.pathname === '/start' && !okStart);
     return new Response('{}', { status: ok ? 200 : 500 });
   };
@@ -110,4 +110,55 @@ test('timeout: un /start senza chiamata appaiata non blocca per sempre', async (
   await start(r, 'B');                                                // aspetta il timeout, poi passa
   await call(r);
   expect(log[2].path).toBe(`/clients/${routeId('p_claude', 'B')}/call_tools`);
+});
+
+// Ultimo uso in memoria e orologio finto: inattivita' e chiusura per chat eliminata.
+const memStore = () => { let o = {}; return { get: () => JSON.parse(JSON.stringify(o)), set: (v) => { o = v; } }; };
+const startAuth = (f, chat) => f(`${BASE}/start`, { method: 'POST', headers: { Authorization: 'Bearer T' },
+  body: JSON.stringify({ mcpServers: { p_claude: cfg(chat) } }) });
+
+test('processo inattivo oltre la soglia: DELETE della voce prima dello /start, con lo stesso token', async () => {
+  const { f, log } = fake();
+  let t = 0;
+  const r = createRouter(f, () => ({}), 30000, () => true, { idleMs: 1000, now: () => t, store: memStore() });
+  await startAuth(r, 'A'); await call(r);                             // primo uso: nessun DELETE
+  t = 999; await startAuth(r, 'A'); await call(r);                    // sotto soglia: nessun DELETE
+  expect(log.map((e) => e.path)).not.toContain(`/clients/${routeId('p_claude', 'A')}`);
+  t = 999 + 1000; await startAuth(r, 'A'); await call(r);             // fermo da 1000 ms: DELETE poi /start
+  const paths = log.map((e) => e.path);
+  const i = paths.indexOf(`/clients/${routeId('p_claude', 'A')}`);
+  expect(i).toBe(4);
+  expect(log[4]).toMatchObject({ method: 'DELETE', auth: 'Bearer T' });
+  expect(paths[5]).toBe('/start');
+});
+
+test('chiamata lunga: l\'ultimo uso e\' la fine della chiamata', async () => {
+  let t = 0;
+  const store = memStore();
+  const slow = async (url, init) => { if (url.includes('call_tools')) t = 5000; return new Response('{}'); };
+  const r = createRouter(slow, () => ({}), 30000, () => true, { idleMs: 1000, now: () => t, store });
+  await startAuth(r, 'A'); await call(r);
+  expect(store.get()[routeId('p_claude', 'A')].t).toBe(5000);
+});
+
+test('chat eliminata: DELETE dei suoi processi, le altre chat restano', async () => {
+  const { f, log } = fake();
+  const store = memStore();
+  const r = createRouter(f, () => ({}), 30000, () => true, { store });
+  await startAuth(r, 'A'); await call(r);
+  await startAuth(r, 'B'); await call(r);
+  expect(await r.closeChat('A')).toEqual([routeId('p_claude', 'A')]);
+  expect(log.at(-1).path).toBe(`/clients/${routeId('p_claude', 'A')}`);
+  expect(Object.keys(store.get())).toEqual([routeId('p_claude', 'B')]);
+  expect(await r.closeChat('sconosciuta')).toEqual([]);
+});
+
+test('chat eliminata prima di ogni /start della sessione: nessun DELETE, ultimo uso dimenticato', async () => {
+  const { f, log } = fake();
+  const store = memStore();
+  store.set({ [routeId('p_claude', 'A')]: { t: 1, chat: 'A' } });
+  const r = createRouter(f, () => ({}), 30000, () => true, { store });
+  expect(await r.closeChat('A')).toEqual([routeId('p_claude', 'A')]);
+  expect(log.length).toBe(0);
+  expect(store.get()).toEqual({});
 });

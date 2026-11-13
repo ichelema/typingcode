@@ -25,6 +25,13 @@ statico e la manda a un processo per chat (`<id>__<chat>`) con `MCP_PROXY_CWD`. 
 appaiato, o senza id chat, la chiamata viene rifiutata; il proxy blocca le chiamate non instradate
 o con cartella non valida. Non è un sandbox: percorsi assoluti fuori cartella restano possibili.
 
+**Chiusura dei processi per chat** (0.7.1, proxy v9): il proxy di una chat termina dopo 30 minuti
+senza messaggi né chiamate in corso (`MCP_PROXY_IDLE_MIN`, 0 = mai). Il connettore non se ne accorge,
+quindi prima di riusare un processo fermo da 29 minuti l'estensione elimina la voce (`DELETE
+/clients/<id>`) e lo `/start` ne crea uno nuovo (ultimo uso in `localStorage`, chiave
+`toolviewer_mcp_use`). Quando TypingMind elimina una chat (`delete('CHAT_<id>')` su IndexedDB)
+l'estensione chiude subito i suoi processi e dimentica cartella e ultimo uso.
+
 ## Struttura
 
 | Percorso | Ruolo |

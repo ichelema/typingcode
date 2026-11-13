@@ -40,6 +40,14 @@ child = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, std
                          text=True, encoding="utf-8", cwd=(WORKDIR or None) if not BLOCK else None)
 
 pending, lock = {}, threading.Lock()
+# v9: con TM_CHAT_ID (un processo per chat) il proxy termina dopo MCP_PROXY_IDLE_MIN minuti (default 30) senza messaggi
+# dal client e senza chiamate in corso. Il connettore non se ne accorge e tiene la voce: l'estensione la elimina prima
+# di riusare una chat inattiva (route.js, soglia un minuto piu' corta). 0 = mai.
+try:
+    IDLE_S = float(os.environ.get("MCP_PROXY_IDLE_MIN", "30")) * 60
+except ValueError:
+    IDLE_S = 1800
+last_activity = time.time()
 
 # v5: regole per risparmiare token, iniettate nelle risposte del server (disattivabili con MCP_PROXY_NO_HINTS=1).
 # Vanno in tools/list (descrizione dei tool: il client le legge sempre) e in initialize.instructions.
@@ -210,7 +218,9 @@ def short(obj, limit=3000):
     return obj if len(s) <= limit else s[:limit] + "...[troncato]"
 
 def client_to_child():
+    global last_activity
     for line in sys.stdin:
+        last_activity = time.time()
         try:
             msg = json.loads(line)
             if msg.get("method") == "tools/call":
@@ -249,11 +259,14 @@ def client_to_child():
         pass
 
 def child_to_client():
+    global last_activity
     for line in child.stdout:
         try:
             msg = json.loads(line)
             with lock:
                 req = pending.pop(msg.get("id"), None) if "id" in msg and "method" not in msg else None
+                if req:
+                    last_activity = time.time()          # la fine di una chiamata lunga conta come attivita'
                 rw = rewrite.pop(msg.get("id"), None) if "id" in msg and "method" not in msg else None
             if rw and add_hints(rw, msg):
                 line = json.dumps(msg, ensure_ascii=False) + "\n"
@@ -292,6 +305,21 @@ with lock:                                  # all'avvio: taglio netto (slack=0) 
 
 if not os.environ.get("MCP_PROXY_NO_VIEWER"):
     threading.Thread(target=ensure_viewer, daemon=True).start()
+
+def idle_watchdog():
+    while True:
+        time.sleep(min(30, max(1, IDLE_S / 4)))
+        with lock:
+            busy = bool(pending)
+        if not busy and time.time() - last_activity > IDLE_S:
+            try:
+                child.terminate()
+            except Exception:
+                pass
+            os._exit(0)
+
+if CHAT_ID and IDLE_S > 0:
+    threading.Thread(target=idle_watchdog, daemon=True).start()
 
 t1 = threading.Thread(target=client_to_child, daemon=True); t1.start()
 t2 = threading.Thread(target=child_to_client, daemon=True); t2.start()

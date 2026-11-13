@@ -1,6 +1,7 @@
 // Estensione TypingMind: pulsante nella barra della chat che apre un pannello laterale con le chiamate ai tool
 // della chat aperta (input, output, durata), lette dalla chat in IndexedDB.
 // Sorgenti in src/, bundle minificato in dist/ext.js (bun script/build.mjs).
+// v0.7.1: processi per chat chiusi dopo 30 min di inattivita' (proxy v9) e quando la chat viene eliminata.
 // v0.7.0: cartella di lavoro per chat: pulsante nella barra del prompt e instradamento delle chiamate MCP a un processo per
 //         chat (route.js; serve il plugin MCP custom con env TM_CHAT_ID="{chatID}" e mcp_proxy.py v8).
 // v0.6.2: Svuota lista nasconde le card della chat solo nel pannello fino a F5.
@@ -15,7 +16,7 @@
 import { NS, VERSION, BTN_ID, PANEL_ID, STYLE_ID, K_OPEN, DIR_BTN_ID } from './config.js';
 import { S } from './state.js';
 import { chatIdFromHash } from './calls.js';
-import { watchSaves } from './db.js';
+import { watchSaves, watchDeletes } from './db.js';
 import { log, stats, lsGet } from './util.js';
 import { CSS } from './style.js';
 import { nativeBtn, applyTheme } from './view.js';
@@ -33,7 +34,9 @@ function init() {
   let curChat = chatIdFromHash(location.hash), active = true;
   // Prima di tutto: TypingMind risolve fetch a ogni chiamata al connettore, quindi il wrapper vale anche per le chat
   // in background. Dopo il cleanup resta in catena ma trasparente.
-  window.fetch = createRouter(window.fetch.bind(window), getDirs, 30000, () => active);
+  const router = createRouter(window.fetch.bind(window), getDirs, 30000, () => active);
+  window.fetch = router;
+  watchDeletes((id) => { if (active) router.closeChat(id).then((r) => r.length && log('chat eliminata, processi chiusi:', r.join(', '))); });
   const onNav = () => {
     if (!active) return;
     const id = chatIdFromHash(location.hash);

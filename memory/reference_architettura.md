@@ -38,7 +38,11 @@ Proxy v8: con `TM_CHAT_ID` senza `TM_ROUTED=1`, o con cartella non assoluta/ines
 Senza `TM_CHAT_ID` (vecchio JSON MCP) il comportamento è invariato. Cartella predefinita delle
 chat senza 📁: `env.exe -C /d/AI/Claude/Trinity` nel plugin (decisa dall'utente il 13/11). Il connettore unisce `env`
 alla sua env predefinita (`getDefaultEnvironment()` + env). Cambio cartella = config diversa =
-il connettore riavvia il processo di quella chat. Processi per chat mai chiusi automaticamente.
+il connettore riavvia il processo di quella chat. Proxy v9: con `TM_CHAT_ID` termina dopo
+`MCP_PROXY_IDLE_MIN` (30) minuti senza messaggi e senza chiamate in corso; il connettore tiene la voce
+morta (non rileva la fine del processo, `/start` con la stessa config non fa nulla, `call_tools` → 500
+"Not connected"), quindi l'estensione fa `DELETE /clients/<id>` prima di riusarla (29 min) e alla
+cancellazione della chat.
 
 ## Configurazione MCP del server `claude_code`
 

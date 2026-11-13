@@ -5,7 +5,7 @@
 // Qui la coppia /start -> call_tools|tools di uno stesso id statico e' serializzata: finche' la chiamata che segue
 // uno /start non e' partita, lo /start successivo aspetta. Entrambe vanno all'id "<statico>__<chat>", con la cartella
 // della chat in env.MCP_PROXY_CWD. Una call_tools senza /start appaiato riceve un errore (fail-closed).
-import { K_DIRS } from './config.js';
+import { K_DIRS, K_USE, IDLE_MS } from './config.js';
 import { lsGet, lsSet } from './util.js';
 
 const PAIRED = /\/clients\/([^/?#]+)\/(call_tools|tools)$/;
@@ -19,14 +19,25 @@ export function setDir(chat, dir) {
 }
 export const routeId = (sid, chat) => `${sid}__${String(chat).replace(/[^\w-]/g, '_')}`;
 
-// baseFetch: il fetch originale. Ritorna il fetch da mettere al suo posto (isActive() falso = trasparente).
-export function createRouter(baseFetch, dirs = getDirs, timeoutMs = 30000, isActive = () => true) {
+const lsUse = { get: () => { try { return JSON.parse(lsGet(K_USE, '{}')) || {}; } catch (e) { return {}; } },
+  set: (o) => lsSet(K_USE, JSON.stringify(o)) };
+
+// baseFetch: il fetch originale. Ritorna il fetch da mettere al suo posto (isActive() falso = trasparente), con
+// .closeChat(chat) per chiudere i processi di una chat eliminata.
+// Processi per chat: il proxy si chiude da solo dopo 30 min di inattivita'; il connettore pero' tiene la voce, quindi
+// prima di riusare un processo fermo da idleMs la voce viene eliminata (DELETE) e lo /start ne crea uno nuovo.
+export function createRouter(baseFetch, dirs = getDirs, timeoutMs = 30000, isActive = () => true,
+  { idleMs = IDLE_MS, now = Date.now, store = lsUse } = {}) {
+  let conn = null;                                                    // { base, auth } dell'ultimo /start: serve ai DELETE
+  const del = (rid, c) => baseFetch(`${c.base}/clients/${encodeURIComponent(rid)}`,
+    { method: 'DELETE', headers: c.auth ? { Authorization: c.auth } : {} }).catch(() => {});
+  const touch = (rid, chat) => { const u = store.get(); u[rid] = { t: now(), chat }; store.set(u); };
   const st = new Map();                                               // id statico -> { tail, holder }
   const routed = new Set();                                           // id statici visti con TM_CHAT_ID
   const state = (sid) => { let s = st.get(sid); if (!s) st.set(sid, s = { tail: Promise.resolve(), holder: null }); return s; };
   const refuse = (msg) => new Response(JSON.stringify({ error: msg }), { status: 409, headers: { 'Content-Type': 'application/json' } });
 
-  return async function routedFetch(input, init) {
+  async function routedFetch(input, init) {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : null;
     if (!isActive() || !url) return baseFetch(input, init);
     let u;
@@ -55,6 +66,12 @@ export function createRouter(baseFetch, dirs = getDirs, timeoutMs = 30000, isAct
       s.holder = h;
       const next = { ...cfg, env: { ...env, TM_ROUTED: '1', MCP_PROXY_CWD: (chat && dirs()[chat]) || '' } };
       try {
+        let auth = null;
+        try { auth = new Headers((init && init.headers) || {}).get('Authorization'); } catch (e) {}
+        conn = { base: u.origin, auth };
+        const rec = store.get()[h.rid];
+        if (rec && now() - rec.t >= idleMs) await del(h.rid, conn);     // processo probabilmente chiuso per inattivita'
+        touch(h.rid, chat);
         const r = await baseFetch(u.href, { ...init, body: JSON.stringify({ ...body, mcpServers: { [h.rid]: next } }) });
         if (!r.ok) h.release();
         return r;
@@ -69,8 +86,22 @@ export function createRouter(baseFetch, dirs = getDirs, timeoutMs = 30000, isAct
       // senza chat ({chatID} non sostituito) solo l'elenco dei tool: una chiamata girerebbe fuori dalla cartella scelta
       if (!h.chat && m[2] === 'call_tools') return refuse('toolviewer: id della chat assente nella config del plugin (TM_CHAT_ID), chiamata bloccata');
       u.pathname = u.pathname.replace(PAIRED, `/clients/${encodeURIComponent(h.rid)}/${m[2]}`);
-      return baseFetch(u.href, init);
+      touch(h.rid, h.chat);
+      try { return await baseFetch(u.href, init); }
+      finally { touch(h.rid, h.chat); }                               // una chiamata lunga non conta come inattivita'
     }
     return baseFetch(input, init);
+  }
+
+  // Chat eliminata: chiude i suoi processi (se in questa sessione e' gia' passato uno /start, altrimenti ci pensa il
+  // timeout del proxy) e dimentica cartella e ultimo uso.
+  routedFetch.closeChat = async (chat) => {
+    const u = store.get(), rids = Object.keys(u).filter((rid) => u[rid] && u[rid].chat === chat);
+    for (const rid of rids) delete u[rid];
+    store.set(u);
+    setDir(chat, '');
+    if (conn) await Promise.all(rids.map((rid) => del(rid, conn)));
+    return rids;
   };
+  return routedFetch;
 }
