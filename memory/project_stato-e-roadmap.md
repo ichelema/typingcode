@@ -26,7 +26,10 @@ metadata:
   e misure quantitative nel browser normale; non dichiarati superati. Nessun ticket aggiuntivo.
 - Errore MCP: l'utente stava usando il browser di debug e ha interrotto la diagnosi, confermando
   che nel browser normale il test funziona. Nessuna configurazione MCP modificata.
-- Prossimo: decisione su log/viewer, che restano invariati; ICH-179 e ICH-181.
+- ICH-179 verificata il 13/11 su Claude Code 2.1.323: controllo positivo con entrambi gli hook,
+  nessun evento su MCP diretto/proxy con Bash riuscito. Dettagli in [scoperte](reference_scoperte.md).
+  Stato Linear non modificato (Backlog).
+- Prossimo: decisione su log/viewer, che restano invariati; aggiornamento Linear ICH-179 e ICH-181.
 
 # Stato storico (2026-10-15)
 
@@ -52,8 +55,8 @@ Pid e orari dei processi cambiano a ogni avvio: trovali con i comandi in [comand
    viewer (`ensure_viewer`), e se `log_viewer.py` serve ancora. Il log dà ancora: output completo di
    Edit/Write, `pid`/`started` del proxy, chiamate di chat eliminate (il riassunto nel sorgente locale non le elimina). Le regole, la
    riduzione di Edit/Write e il blocco dei comandi distruttivi restano (`pending` serve alla riduzione).
-3. **ICH-179**: ricontrollare gli hook `PreToolUse`/`PostToolUse` con `claude mcp serve` sulla
-   versione attuale di Claude Code (ultimo test sulla 2.1.299).
+3. **ICH-179**: ricontrollo completato sulla 2.1.323; hook assenti su MCP diretto e proxy,
+   controllo positivo riuscito. Resta da registrare l'esito su Linear (non autorizzato in questa verifica).
 4. **ICH-181**: percorsi relativi alla radice del progetto e supporto Linux per proxy, viewer,
    `chrome-debug.sh` e `cdp.mjs` (oggi funzionano solo in `D:\Sviluppo\Progetti\typingcode` su Windows; su Linux il
    viewer non parte, senza avvisi). Risolve anche il limite del worktree per ICH-180.

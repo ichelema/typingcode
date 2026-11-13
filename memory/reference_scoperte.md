@@ -1,15 +1,22 @@
 ---
 name: scoperte
-description: hook non scattano con claude mcp serve (2.1.299); nessun id chat (generated true); dati dei tool nella chat IndexedDB; salvataggio con put; errori format error; Sentry Replay; costo accessibilità; connettore 50880/50881 e HOSTNAME; compattazione del contesto
+description: PreToolUse/PostToolUse non scattano con claude mcp serve (ricontrollo 2.1.323); nessun id chat (generated true); dati dei tool nella chat IndexedDB; salvataggio con put; errori format error; Sentry Replay; costo accessibilità; connettore 50880/50881 e HOSTNAME; compattazione del contesto
 metadata:
   type: reference
 ---
 
 # Scoperte ed esclusioni
 
-- **Hook Claude Code (PostToolUse)**: funzionano in Claude Code normale, **non scattano con
-  `claude mcp serve`** (né da `.claude/settings.json` né da plugin `--plugin-dir`). Versione testata:
-  2.1.299. Ricontrollo su una versione nuova: ICH-179.
+- **Hook Claude Code (ICH-179, ricontrollo 13/11 su 2.1.323)**: `PreToolUse` e `PostToolUse`,
+  matcher `Bash` in `.claude/settings.json`, scattano nel controllo positivo `claude -p`
+  (`echo hook-test`, entrambi gli eventi nella stessa sessione). Con la stessa cwd e gli stessi
+  settings non si aggiunge alcun evento né con `claude mcp serve` diretto né attraverso
+  `mcp_proxy.py`; entrambi restituiscono correttamente `stdout: "hook-test"`.
+  Primo tentativo MCP scaduto dopo 25 s; ripetizione con timeout 90 s riuscita.
+  Prove isolate sotto `$HOME/.pi/agent/tmp`, log separati e viewer disabilitato; nessun uso
+  dei connettori o log di produzione. Esito limitato a questi hook/settings: non un test di tutti
+  gli hook o plugin. Il precedente test PostToolUse su 2.1.299 includeva anche `--plugin-dir`.
+  La guardia del proxy resta necessaria per il percorso MCP; ICH-179 non modificata su Linear.
 - **Nessun id di chat lato MCP**: tutte le chat passano da un unico canale (`clientInfo` =
   `mcp-http-bridge-claude_code`), `params` contiene solo `name` e `arguments`.
   `CLAUDE_CODE_SESSION_ID` identifica il processo server, non la chat.
