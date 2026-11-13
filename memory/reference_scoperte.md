@@ -18,6 +18,21 @@ metadata:
   gli hook o plugin. Il precedente test PostToolUse su 2.1.299 includeva anche `--plugin-dir`.
   La guardia del proxy resta necessaria per il percorso MCP; ICH-179 Done il 13/11 su richiesta
   dell'utente, con esito pubblicato su Linear (verifica conclusa, limite non risolto).
+- **Comandi `/cd` e cartella MCP (13/11, 2.1.323)**: prova isolata, stessa istanza
+  `claude mcp serve`: `pwd` → cartella iniziale; `cd child && pwd` → sottocartella;
+  `pwd` successivo → cartella iniziale. Risposte Bash riuscite, con `Shell cwd was reset`
+  nello stderr del risultato. `tools/list` non espone `Cd` o un setter generico della cwd;
+  `Read` relativo restituisce il marker della cartella iniziale, ma il suo schema richiede
+  percorsi assoluti (quindi non fare affidamento sui relativi).
+  [Documentazione `/cd`](https://code.claude.com/docs/en/permissions#move-the-session-to-another-directory):
+  è un comando della sessione interattiva, che cambia anche configurazione e contesto progetto;
+  [MCP](https://code.claude.com/docs/en/mcp#use-claude-code-as-an-mcp-server) espone i tool, non quel prompt.
+  La [persistenza Bash documentata](https://code.claude.com/docs/en/tools-reference#what-persists-between-commands)
+  è condizionata a sessione/directory; il reset è l'esito osservato nel test MCP locale,
+  non una prova per ogni piattaforma/configurazione. Un campo nella sidebar richiederebbe
+  gestione esplicita della cartella lato backend, non un semplice inoltro di `/cd`.
+  Il server attuale è condiviso tra chat: un cambio globale influenzerebbe tutte; nessuna
+  implementazione decisa o eseguita.
 - **Nessun id di chat lato MCP**: tutte le chat passano da un unico canale (`clientInfo` =
   `mcp-http-bridge-claude_code`), `params` contiene solo `name` e `arguments`.
   `CLAUDE_CODE_SESSION_ID` identifica il processo server, non la chat.

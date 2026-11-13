@@ -36,7 +36,11 @@ metadata:
 - ICH-179 verificata il 13/11 su Claude Code 2.1.323: controllo positivo con entrambi gli hook,
   nessun evento su MCP diretto/proxy con Bash riuscito. Dettagli in [scoperte](reference_scoperte.md).
   Esito pubblicato su Linear e stato **Done** riletto il 13/11 su autorizzazione dell'utente.
-- Prossimo: decisione su log/viewer, che restano invariati; ICH-181.
+- Ricerca campo comandi/cartella nella sidebar (13/11): `/cd` è interattivo, non un tool MCP;
+  nel test 2.1.323 il `cd` Bash non persiste alla chiamata successiva. Nessuna implementazione;
+  prima chiarire se la cartella deve essere globale o per chat (server attuale condiviso).
+  Evidenze e fonti in [scoperte](reference_scoperte.md).
+- Prossimo: scelta sul campo cartella; decisione su log/viewer, che restano invariati; ICH-181.
 
 # Stato storico (2026-10-15)
 
