@@ -31,7 +31,10 @@ metadata:
   modificare IndexedDB. Nuove chiamate visibili, stato separato per chat fino a F5; Ricarica
   e chiudi/riapri non annullano lo svuotamento. F5 ripristina tutta la lista.
   L'URL 0.6.1 sopra resta quello installato finché l'utente non lo sostituisce.
-- **0.7.0 (13/11, cartella per chat)**: pulsante 📁 nella barra del prompt + `route.js`
+- **0.7.0 (13/11, cartella per chat), commit `469b580`**, URL verificato (200, JavaScript, CORS `*`,
+  identico a `dist/ext.js`), da installare dall'utente:
+  `https://rawcdn.githack.com/ichelema/typingcode/469b5804c2453f421902b045463ccaece587c6e0/dist/ext.js`
+  Pulsante 📁 nella barra del prompt + `route.js`
   (wrapper di `fetch` verso il connettore). Richiede il plugin MCP custom
   `src/mcp/claude_code.plugin.json` al posto di `claude_code` nel JSON MCP. Test: 18 PASS;
   e2e reale nel Chrome di debug (connettore 50881 + proxy v8 + `claude mcp serve`): due chat in
