@@ -16,7 +16,8 @@ metadata:
   Prove isolate sotto `$HOME/.pi/agent/tmp`, log separati e viewer disabilitato; nessun uso
   dei connettori o log di produzione. Esito limitato a questi hook/settings: non un test di tutti
   gli hook o plugin. Il precedente test PostToolUse su 2.1.299 includeva anche `--plugin-dir`.
-  La guardia del proxy resta necessaria per il percorso MCP; ICH-179 non modificata su Linear.
+  La guardia del proxy resta necessaria per il percorso MCP; ICH-179 Done il 13/11 su richiesta
+  dell'utente, con esito pubblicato su Linear (verifica conclusa, limite non risolto).
 - **Nessun id di chat lato MCP**: tutte le chat passano da un unico canale (`clientInfo` =
   `mcp-http-bridge-claude_code`), `params` contiene solo `name` e `arguments`.
   `CLAUDE_CODE_SESSION_ID` identifica il processo server, non la chat.
