@@ -19,7 +19,7 @@
             "claude_code_chat": {
               "command": "D:\\msys64\\usr\\bin\\env.exe",
               "args": [
-                "-C", "/e/AI/Claude/Trinity",
+                "-C", "/d/AI/Claude/Trinity",
                 "USERPROFILE=E:\\msys64\\home\\Sphynx",
                 "MSYSTEM=UCRT64",
                 "MSYS2_ROOT=E:\\msys64",

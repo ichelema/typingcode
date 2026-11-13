@@ -35,7 +35,8 @@ TypingMind (plugin MCP custom, env TM_CHAT_ID="{chatID}")
 
 Proxy v8: con `TM_CHAT_ID` senza `TM_ROUTED=1`, o con cartella non assoluta/inesistente, ogni
 `tools/call` riceve un errore (fail-closed); `/d/x` diventa `d:/x`; log `proxy_log_<chat>.jsonl`.
-Senza `TM_CHAT_ID` (vecchio JSON MCP) il comportamento è invariato. Il connettore unisce `env`
+Senza `TM_CHAT_ID` (vecchio JSON MCP) il comportamento è invariato. Cartella predefinita delle
+chat senza 📁: `env.exe -C /d/AI/Claude/Trinity` nel plugin (decisa dall'utente il 13/11). Il connettore unisce `env`
 alla sua env predefinita (`getDefaultEnvironment()` + env). Cambio cartella = config diversa =
 il connettore riavvia il processo di quella chat. Processi per chat mai chiusi automaticamente.
 
