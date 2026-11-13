@@ -17,7 +17,11 @@ metadata:
   Non sono misure del browser normale.
 - Il riassunto conserva la cronologia nel sorgente locale; evidenze e limiti in
   [scoperte](reference_scoperte.md). Nessun nuovo riassunto provocato, nessun prompt inviato.
-- Prossimo: prove manuali ICH-182 nel browser normale; log e viewer non modificati.
+- Conferma dell'utente (13/11 03:50), browser normale con 0.6.1 (`811cc0c`): dopo F5 le
+  vecchie chiamate restano visibili e una nuova chiamata si aggiunge senza ricaricare.
+  Non ancora confermati il passaggio «in corso» → finita e gli altri criteri di ICH-182.
+- Prossimo: restanti prove ICH-182 (chat in background, altri server, errori, riassunto e
+  prestazioni nel browser normale); log e viewer non modificati.
 
 # Stato storico (2026-10-15)
 
