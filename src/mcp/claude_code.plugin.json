@@ -20,19 +20,19 @@
               "command": "D:\\msys64\\usr\\bin\\env.exe",
               "args": [
                 "-C", "/d/AI/Claude/Trinity",
-                "USERPROFILE=E:\\msys64\\home\\Sphynx",
+                "USERPROFILE=D:\\msys64\\home\\Sphynx",
                 "MSYSTEM=UCRT64",
-                "MSYS2_ROOT=E:\\msys64",
+                "MSYS2_ROOT=D:\\msys64",
                 "CHERE_INVOKING=1",
                 "MSYS2_PATH_TYPE=strict",
-                "HOME=/e/msys64/home/Sphynx",
+                "HOME=/d/msys64/home/Sphynx",
                 "PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.JS;.WSH;.MSC",
                 "COMSPEC=C:\\WINDOWS\\system32\\cmd.exe",
-                "MISE_CONFIG_DIR=E:/msys64/home/Sphynx/.config/mise",
+                "MISE_CONFIG_DIR=D:/msys64/home/Sphynx/.config/mise",
                 "D:\\msys64\\usr\\bin\\zsh.exe",
                 "-l",
                 "-c",
-                "export PATH=\"$HOME/.local/bin:$PATH\"; exec python3 D:/Sviluppo/Progetti/Personali/20261015_typingcode/src/mcp/mcp_proxy.py claude mcp serve 2>>/e/AI/Claude/mcp_claude_err.log"
+                "export PATH=\"$HOME/.local/bin:$PATH\"; exec python3 D:/Sviluppo/Progetti/Personali/20261015_typingcode/src/mcp/mcp_proxy.py claude mcp serve 2>>/d/AI/Claude/mcp_claude_err.log"
               ],
               "env": {
                 "TM_CHAT_ID": "{chatID}"
