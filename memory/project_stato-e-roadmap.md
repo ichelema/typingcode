@@ -1,6 +1,6 @@
 ---
 name: stato-e-roadmap
-description: stato al 2026-10-15 (estensione 0.6.1 di ICH-180 installata nei due browser, proxy v7, connettore MCP di debug, profilo di debug in D:, C:\Download\test da eliminare) e prossimi passi: URL 0.6.0, decisione su log e viewer, ICH-179, ICH-181
+description: stato al 2026-11-13, ICH-180 e ICH-182 Done su richiesta utente; prove funzionali confermate, limiti documentati; decisione log/viewer, ICH-179 e ICH-181
 metadata:
   type: project
 ---
@@ -9,7 +9,8 @@ metadata:
 
 - Checkout attuale: `D:/Sviluppo/Progetti/Personali/20261015_typingcode`; i percorsi assoluti
   storici nelle memorie/script non sono stati migrati (ICH-181).
-- ICH-180 e ICH-182 ancora Backlog su Linear. `bun test`: 9 PASS, 23 asserzioni.
+- ICH-180 e ICH-182 **Done** su richiesta esplicita dell'utente (13/11); commenti con esiti
+  e limiti pubblicati su entrambe, stato riletto e confermato. `bun test`: 9 PASS, 23 asserzioni.
 - Chrome di debug e connettore avviati con `script/chrome-debug.sh` dal checkout attuale.
   Script installato `811cc0c`, 0.6.1: dopo reload 163 card per 163 risposte tool, blocco Sentry presente.
 - A pagina stabilizzata, Ricarica: una lettura, 32 ms; long task osservati in 3 s: 51 e 97 ms,
@@ -19,9 +20,13 @@ metadata:
   [scoperte](reference_scoperte.md). Nessun nuovo riassunto provocato, nessun prompt inviato.
 - Conferma dell'utente (13/11 03:50), browser normale con 0.6.1 (`811cc0c`): dopo F5 le
   vecchie chiamate restano visibili e una nuova chiamata si aggiunge senza ricaricare.
-  Non ancora confermati il passaggio «in corso» → finita e gli altri criteri di ICH-182.
-- Prossimo: restanti prove ICH-182 (chat in background, altri server, errori, riassunto e
-  prestazioni nel browser normale); log e viewer non modificati.
+- Successivamente l'utente conferma: separazione chat A/B, «in corso» → «ok», errore intenzionale
+  riconosciuto, Playwright e filesystem_binary visibili, digitazione fluida nella chat lunga.
+- Chiusura accettata senza prova prima/dopo un nuovo riassunto online, stato dell'accessibilità
+  e misure quantitative nel browser normale; non dichiarati superati. Nessun ticket aggiuntivo.
+- Errore MCP: l'utente stava usando il browser di debug e ha interrotto la diagnosi, confermando
+  che nel browser normale il test funziona. Nessuna configurazione MCP modificata.
+- Prossimo: decisione su log/viewer, che restano invariati; ICH-179 e ICH-181.
 
 # Stato storico (2026-10-15)
 
@@ -40,13 +45,12 @@ Pid e orari dei processi cambiano a ogni avvio: trovali con i comandi in [comand
 
 # Prossimi passi (in ordine)
 
-1. **ICH-182** (controlli di ICH-180, nel browser normale): prova dal vivo della 0.6.1 con l'URL
-   githack, effetto del riassunto automatico del contesto sulle chiamate del pannello, stato
-   dell'accessibilità e long task con una chat lunga. Snippet di misura nella issue.
-2. Dopo la prova: decidere se togliere da `mcp_proxy.py` la parte di log (`write(LOG…)`, `META`,
+1. **ICH-180 e ICH-182 concluse** su richiesta dell'utente, con i limiti indicati sopra.
+   Eventuali verifiche aggiuntive sul riassunto e sulle prestazioni non sono state eseguite.
+2. Decidere se togliere da `mcp_proxy.py` la parte di log (`write(LOG…)`, `META`,
    rotazione, variabili `MCP_PROXY_LOG/KEEP/KEEP_META/MAX_MB/ROTATE_EVERY/NO_VIEWER`) e l'avvio del
    viewer (`ensure_viewer`), e se `log_viewer.py` serve ancora. Il log dà ancora: output completo di
-   Edit/Write, `pid`/`started` del proxy, chiamate di chat eliminate o compattate. Le regole, la
+   Edit/Write, `pid`/`started` del proxy, chiamate di chat eliminate (il riassunto nel sorgente locale non le elimina). Le regole, la
    riduzione di Edit/Write e il blocco dei comandi distruttivi restano (`pending` serve alla riduzione).
 3. **ICH-179**: ricontrollare gli hook `PreToolUse`/`PostToolUse` con `claude mcp serve` sulla
    versione attuale di Claude Code (ultimo test sulla 2.1.299).
