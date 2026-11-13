@@ -40,7 +40,10 @@ metadata:
   nel test 2.1.323 il `cd` Bash non persiste alla chiamata successiva. Nessuna implementazione;
   prima chiarire se la cartella deve essere globale o per chat (server attuale condiviso).
   Evidenze e fonti in [scoperte](reference_scoperte.md).
-- Prossimo: scelta sul campo cartella; decisione su log/viewer, che restano invariati; ICH-181.
+- Cartella per chat (richiesta 13/11, pulsante nella barra del prompt): fattibile solo con
+  plugin MCP custom non generato + wrapper fetch con serializzazione start→call e un processo
+  per chat (dettagli in [scoperte](reference_scoperte.md)). In attesa di conferma dell'utente.
+- Prossimo: conferma architettura cartella per chat; decisione su log/viewer, che restano invariati; ICH-181.
 
 # Stato storico (2026-10-15)
 

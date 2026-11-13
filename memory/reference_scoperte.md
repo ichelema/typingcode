@@ -33,6 +33,19 @@ metadata:
   gestione esplicita della cartella lato backend, non un semplice inoltro di `/cd`.
   Il server attuale è condiviso tra chat: un cambio globale influenzerebbe tutte; nessuna
   implementazione decisa o eseguita.
+- **Id chat verso MCP (13/11, bundle online + sorgente locale)**: i plugin MCP **non generati**
+  (installati a mano, `implementationType:"mcp"`) passano la config del server da
+  `parseAndReplaceJSON` con `{...contextVariables, ...userSettings}`; sintassi a graffe singole
+  (`{chatID}`), chiavi sconosciute lasciate letterali. `contextVariables:{chatID}` viene dal
+  generator della chat che genera (anche in background). Quindi un env `"TM_CHAT_ID":"{chatID}"`
+  arriva nel body di `POST /start`. Il ramo `generated` (server del JSON MCP, quello in uso) non
+  sostituisce nulla. `CHAT_ID` maiuscolo dei plugin JS è sempre `undefined` (nessuno lo scrive).
+  `callTool` = `/start` (id statico) → attesa → `/clients/<id>/call_tools` senza chat id: la
+  correlazione start→call non è atomica tra chat. Il fetch del client MCP è `(e,t)=>fetch(e,t)`
+  (modulo 182504): risolto a ogni chiamata, quindi intercettabile da un wrapper dell'estensione.
+  Idea valutata: wrapper che serializza per id statico la coppia `/start`→`call_tools`/`tools`,
+  riscrivendo entrambe verso un serverID per chat (un processo per chat con cwd propria).
+  Toolbar del prompt: `[data-element-id="chat-input-actions"] > div:first-child`.
 - **Nessun id di chat lato MCP**: tutte le chat passano da un unico canale (`clientInfo` =
   `mcp-http-bridge-claude_code`), `params` contiene solo `name` e `arguments`.
   `CLAUDE_CODE_SESSION_ID` identifica il processo server, non la chat.
