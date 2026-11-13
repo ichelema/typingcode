@@ -7,6 +7,13 @@ metadata:
 
 # Ripresa verificata (2026-11-13)
 
+- **0.6.2**: aggiunto «Svuota lista» nel pannello; nasconde solo le card della chat aperta,
+  incluse quelle in corso, senza modificare IndexedDB. Nuove chiamate visibili; stato separato
+  per chat fino a F5, conservato con Ricarica e chiudi/riapri. Test: 10 PASS, 35 asserzioni;
+  prova nel Chrome di debug con 174 card superata e dati della chat invariati nei conteggi.
+  Browser di debug ripristinato alla versione installata dopo la prova. Per usare il pulsante
+  occorre installare l'URL githack del nuovo commit; 0.6.1 resta installata fino al cambio URL.
+
 - Checkout attuale: `D:/Sviluppo/Progetti/Personali/20261015_typingcode`; i percorsi assoluti
   storici nelle memorie/script non sono stati migrati (ICH-181).
 - ICH-180 e ICH-182 **Done** su richiesta esplicita dell'utente (13/11); commenti con esiti

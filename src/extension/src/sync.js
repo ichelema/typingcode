@@ -18,10 +18,23 @@ export async function sync(force) {
     const id = chatIdFromHash(location.hash);
     let chat = null, calls = [];
     if (id) { const t0 = performance.now(); chat = await readChat(id); calls = callsFromChat(chat); noteRead(performance.now() - t0); }
+    if (id !== chatIdFromHash(location.hash)) { S.rerun = true; return; }
+    const hidden = S.hiddenCalls.get(id);
+    if (hidden) calls = calls.filter((c) => !hidden.has(c.id));
     setSub(id, chat, calls.length);
     render(id, calls, force);
   } catch (e) { log('sync:', e); }
   finally { S.reading = false; if (S.rerun) { S.rerun = false; sync(false); } }
+}
+
+export function clearCalls() {
+  const id = chatIdFromHash(location.hash);
+  if (!id || id !== S.cardsChat) return;
+  const hidden = S.hiddenCalls.get(id) || new Set();
+  for (const callId of S.cards.keys()) hidden.add(callId);
+  S.hiddenCalls.set(id, hidden);
+  render(id, [], true);
+  if (S.countEl) S.countEl.textContent = ' · 0 chiamate';
 }
 
 let timer = 0;

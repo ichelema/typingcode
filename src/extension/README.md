@@ -11,6 +11,11 @@ pulsante Ricarica, salvataggio della chat aperta (osservato su `IDBObjectStore.p
 La lista sta in uno shadow root con `data-sentry-block`: le altre estensioni non la elaborano e la
 registrazione di sessione di TypingMind (Sentry Replay) non registra gli output dei tool.
 
+**Svuota lista** (0.6.2) nasconde le chiamate mostrate nella chat aperta, senza cancellare dati
+in IndexedDB. Le nuove chiamate continuano a comparire; quelle nascoste, anche se ancora in corso,
+restano nascoste con Ricarica, chiudi/riapri e cambio chat. Lo stato è separato per chat e dura
+fino a F5, che ripristina la lista completa.
+
 ## Struttura
 
 | Percorso | Ruolo |

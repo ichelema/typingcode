@@ -24,6 +24,11 @@ metadata:
   jsDelivr risponde 503 per i commit nuovi: usare githack. Installazione: Preferences → Advanced
   Settings → Extensions → sostituire l'URL vecchio → ricaricare (F5). Dopo il cambio dell'URL serve F5:
   fino ad allora la pagina esegue la versione vecchia.
+- **0.6.2 da installare dopo la pubblicazione**: pulsante «Svuota lista» nel pannello.
+  Nasconde solo le chiamate già mostrate della chat aperta (anche quelle in corso), senza
+  modificare IndexedDB. Nuove chiamate visibili, stato separato per chat fino a F5; Ricarica
+  e chiudi/riapri non annullano lo svuotamento. F5 ripristina tutta la lista.
+  L'URL 0.6.1 sopra resta quello installato finché l'utente non lo sostituisce.
 - Versioni:
   - 0.1: riquadro + avviso offline
   - 0.2.0: filtro per chat — **rileggeva la chat ogni 3 s → blocchi di Chrome**

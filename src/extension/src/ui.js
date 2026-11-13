@@ -3,9 +3,9 @@ import { BTN_ID, PANEL_ID, K_OPEN, K_WIDTH, DEF_W } from './config.js';
 import { S } from './state.js';
 import { clampW } from './calls.js';
 import { lsGet, lsSet } from './util.js';
-import { LIST_CSS, ICON_TOOLS, ICON_RELOAD, ICON_CLOSE } from './style.js';
+import { LIST_CSS, ICON_TOOLS, ICON_RELOAD, ICON_CLEAR, ICON_CLOSE } from './style.js';
 import { nativeBtn, applyTheme } from './view.js';
-import { sync } from './sync.js';
+import { sync, clearCalls } from './sync.js';
 
 function buildPanel() {
   const p = document.createElement('div');
@@ -14,6 +14,7 @@ function buildPanel() {
   p.innerHTML = `<div class="tv-resize" title="Trascina per ridimensionare"></div>
 <div class="tv-head"><div class="tv-titles"><div class="tv-title">Tool output</div><div class="tv-sub"><span class="tv-chat"></span><span class="tv-count"></span></div></div>
 <button type="button" class="tv-icon" data-act="reload" aria-label="Ricarica" data-tooltip-id="global" data-tooltip-content="Rileggi la chat">${ICON_RELOAD}</button>
+<button type="button" class="tv-icon" data-act="clear" aria-label="Svuota lista (solo pannello; F5 ripristina)" title="Svuota lista (solo pannello; F5 ripristina)" data-tooltip-id="global" data-tooltip-content="Svuota lista (solo pannello; F5 ripristina)">${ICON_CLEAR}</button>
 <button type="button" class="tv-icon" data-act="close" aria-label="Chiudi" data-tooltip-id="global" data-tooltip-content="Chiudi">${ICON_CLOSE}</button></div>
 <div class="tv-list"></div>`;
   // Lista in uno shadow root: gli osservatori DOM delle altre estensioni non vedono le card (163 card nel documento =
@@ -26,6 +27,7 @@ function buildPanel() {
   S.listEl = root.lastChild; S.chatEl = p.querySelector('.tv-chat'); S.countEl = p.querySelector('.tv-count');
   p.querySelector('[data-act="close"]').onclick = () => setOpen(false);
   p.querySelector('[data-act="reload"]').onclick = () => sync(true);
+  p.querySelector('[data-act="clear"]').onclick = clearCalls;
   const grip = p.querySelector('.tv-resize');                         // ridimensionamento trascinando il bordo sinistro
   grip.addEventListener('pointerdown', (e) => {
     e.preventDefault();

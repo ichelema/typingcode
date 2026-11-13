@@ -45,4 +45,5 @@ pre{margin:0;padding:6px 12px 10px;font-family:Consolas,monospace;font-size:12.5
 const svg = (inner) => `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 export const ICON_TOOLS = svg('<rect x="1.75" y="2.75" width="14.5" height="12.5" rx="2"/><polyline points="5 7 7.5 9 5 11"/><line x1="9.5" y1="11.25" x2="13" y2="11.25"/>');
 export const ICON_RELOAD = svg('<path d="M15.25 9a6.25 6.25 0 1 1-1.83-4.42"/><polyline points="15.25 2.75 15.25 5.75 12.25 5.75"/>');
+export const ICON_CLEAR = svg('<path d="M3 5h12M6 5V3h6v2m2 0-.7 10H4.7L4 5m3 3v4m4-4v4"/>');
 export const ICON_CLOSE = svg('<line x1="4.5" y1="4.5" x2="13.5" y2="13.5"/><line x1="13.5" y1="4.5" x2="4.5" y2="13.5"/>');
