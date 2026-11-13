@@ -9,6 +9,13 @@ metadata:
 
 - **Resto su MCP** (15/10): valutati il Claude Agent SDK come provider LiteLLM e il prototipo
   `X-TM-Chat-Id` verso l'endpoint del modello. L'utente ha scelto di restare su MCP.
+- **Resto su MCP, confermato** (13/11 06:11): rivalutato l'SDK dopo il plugin `{chatID}`.
+  Ibrido (SDK dietro un tool MCP): id chat risolto, ma doppio modello. SDK come modello
+  LiteLLM: id chat forse ottenibile con un dynamic context `static` di un agente
+  (`oP(staticContent, variables)` con `chatID`, solo da sorgente, non provato), ma in quella
+  chat si perdono plugin/tool di TypingMind e cambio modello. Le chiamate sarebbero leggibili
+  dal JSONL di sessione `~/.claude/projects/<cwd>/<session>.jsonl` (`tool_use`/`tool_result`,
+  formato non documentato). L'utente preferisce lasciare così.
 - **0.5.0 annullata, ritorno alla 0.4.1** (15/10 04:40): un processo `claude mcp serve` per chat
   mandava le chiamate delle chat in background al processo della chat aperta (ICH-178), e più proxy
   sullo stesso log corrompevano righe. Lo stato condiviso tra le chat non era un problema reale per
